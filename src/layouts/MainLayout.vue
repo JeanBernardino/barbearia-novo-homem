@@ -14,6 +14,10 @@
         <q-toolbar-title>
           Barbearia Novo Homem
         </q-toolbar-title>
+
+        <q-toolbar-title>
+          {{name}}
+        </q-toolbar-title>
         
       </q-toolbar>
     </q-header>
@@ -66,7 +70,7 @@
               </q-item-section>
             </q-item>
 
-            <q-item clickable v-ripple @click="logout" class="fixed-bottom">
+            <q-item clickable v-ripple @click="onLogout" class="fixed-bottom">
               <q-item-section avatar>
                 <q-icon name="logout" />
               </q-item-section>
@@ -86,15 +90,19 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
+import { useAuthStore } from 'src/stores/auth';
 import { ref } from 'vue';
 
 const leftDrawerOpen = ref(false);
+const authStore = useAuthStore();
+const { name } = storeToRefs(authStore)
 
 function toggleLeftDrawer () {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 
-function logout() {
-  console.log('função de logout')
+function onLogout() {
+  authStore.logout();
 }
 </script>

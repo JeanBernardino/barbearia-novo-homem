@@ -1,9 +1,5 @@
 <template>
   <q-input v-model="password" :type="isPsw ? 'password' : 'text'" label="Senha" outlined >
-    <template v-slot:prepend>
-      <slot name="icon"></slot>
-    </template>
-
     <template v-slot:append>
       <q-icon :name="isPsw ? 'visibility' : 'visibility_off'" @click="onChangeVisility"/>
     </template>
