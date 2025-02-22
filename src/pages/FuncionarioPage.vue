@@ -5,6 +5,14 @@
         <q-input v-model="name" type="text" label="Nome" outlined/>
       </div>
 
+      <div class="q-mb-md">
+        <q-input v-model="email" type="email" label="E-mail" outlined :rules="[
+            val => !!val || 'Necessário informar um usuário.',
+            'email'
+          ]"
+        />
+      </div>
+
       <div class="row q-col-gutter-x-md q-mb-md">
         <q-input class="col-8 " v-model="hornDate" type="text" mask="##/##/####" label="Data Nascimento" outlined>
           <template v-slot:append>
@@ -38,20 +46,18 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from 'src/stores/auth';
 import { Notify } from 'quasar';
 import { ref } from 'vue';
 
-const authStore = useAuthStore();
-
 const name = ref<string>("")
+const email = ref<string>("")
 const hornDate = ref<string>("")
 const gender = ref<string>("")
 const user = ref<string>("")
 const password = ref<string>("")
 
 function onSave() {
-  authStore.login('admin', 'admin');
+  console.log("novo usuario")
 }
 
 function onChangeVisility(value:boolean) {

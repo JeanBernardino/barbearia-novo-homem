@@ -1,5 +1,5 @@
 <template>
-  <q-input v-model="password" :type="isPsw ? 'password' : 'text'" label="Senha" outlined >
+  <q-input v-model="password" :type="isPsw ? 'password' : 'text'" :rules="rules" label="Senha" outlined >
     <template v-slot:append>
       <q-icon :name="isPsw ? 'visibility' : 'visibility_off'" @click="onChangeVisility"/>
     </template>
@@ -8,11 +8,13 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import type { PropType } from 'vue';
 
 // props
-const props = defineProps<{
-  modelValue: string;
-}>();
+const props = defineProps({
+  modelValue: String,
+  rules: Array as PropType<Array<(value: string) => boolean | string>>, // Correção aqui
+});
 
 // Define emit (para emitir o evento de update)
 const emit = defineEmits<{

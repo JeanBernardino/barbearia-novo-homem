@@ -6,11 +6,13 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/IndexPage.vue') },
-      { path: '/funcionarios', component: () => import('pages/FuncionarioPage.vue') },
-      { path: '/servicos', component: () => import('pages/ServicoPage.vue') },
-      { path: '/pagamentos', component: () => import('pages/PagamentoPage.vue') },
-      { path: '/produtos', component: () => import('pages/ProdutoPage.vue') }
+      { path: '/usuarios', component: () => import('pages/UsuarioPage.vue'), meta: { requiresAuth: true } },
+      { path: '/funcionarios', component: () => import('pages/FuncionarioPage.vue'), meta: { requiresAuth: true } },
+      { path: '/servicos', component: () => import('pages/ServicoPage.vue'), meta: { requiresAuth: true }},
+      { path: '/pagamentos', component: () => import('pages/PagamentoPage.vue'), meta: { requiresAuth: true } },
+      { path: '/produtos', component: () => import('pages/ProdutoPage.vue'), meta: { requiresAuth: true } }
     ],
+    meta: { requiresAuth: true }
   },
 
   {

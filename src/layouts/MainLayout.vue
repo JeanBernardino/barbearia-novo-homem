@@ -14,11 +14,6 @@
         <q-toolbar-title>
           Barbearia Novo Homem
         </q-toolbar-title>
-
-        <q-toolbar-title>
-          {{name}}
-        </q-toolbar-title>
-        
       </q-toolbar>
     </q-header>
 
@@ -30,6 +25,16 @@
       <q-scroll-area class="fit">
           <!-- Menu Principal -->
           <q-list padding class="menu-list fit">
+            <q-item clickable v-ripple to="/usuarios">
+              <q-item-section avatar>
+                <q-icon name="person" />
+              </q-item-section>
+
+              <q-item-section>
+                Usuários
+              </q-item-section>
+            </q-item>
+
             <q-item clickable v-ripple to="/funcionarios">
               <q-item-section avatar>
                 <q-icon name="badge" />
@@ -90,19 +95,34 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
-import { useAuthStore } from 'src/stores/auth';
+import { useAuthStore } from 'src/stores/global/AuthStore';
 import { ref } from 'vue';
+import { Notify } from 'quasar';
+import { useRouter } from 'vue-router';
 
 const leftDrawerOpen = ref(false);
 const authStore = useAuthStore();
-const { name } = storeToRefs(authStore)
+
+const router = useRouter()
 
 function toggleLeftDrawer () {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 
-function onLogout() {
-  authStore.logout();
+async function onLogout() {
+  try {
+    await authStore.logout();
+    Notify.create({
+      message: 'Logout realizado com sucesso.',
+      type: 'positive',
+    });
+    await router.push('/login')
+  } catch {
+    Notify.create({
+      message: 'Erro ao realizar logout.',
+      type: 'negative',
+    });
+  }
+  
 }
 </script>

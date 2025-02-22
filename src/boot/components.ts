@@ -1,5 +1,5 @@
 import { defineBoot } from '#q-app/wrappers'
-import PasswordInput from 'src/components/PasswordInput.vue'
+import PasswordInput from 'src/components/global/PasswordInput.vue'
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
