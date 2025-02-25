@@ -1,7 +1,6 @@
-export interface FuncionarioModel {
+import type { AbstractModel } from "./AbstractModel"
 
-    id: number
+export interface FuncionarioModel extends AbstractModel {
     nome: string
-    cargo: string
-    
+    cargo: string    
 }

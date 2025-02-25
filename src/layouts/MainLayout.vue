@@ -55,15 +55,33 @@
               </q-item-section>
             </q-item>
 
-            <q-item clickable v-ripple to="/produtos">
-              <q-item-section avatar>
-                <q-icon name="shopping_bag" />
-              </q-item-section>
+            <q-expansion-item
+              expand-separator
+              icon="inventory"
+              label="Produtos"
+            >
+              <q-list>
+                <q-item clickable v-ripple to="/categorias">
+                  <q-item-section avatar>
+                    <q-icon name="category" />
+                  </q-item-section>
 
-              <q-item-section>
-                Produtos
-              </q-item-section>
-            </q-item>
+                  <q-item-section>
+                    Categorias
+                  </q-item-section>
+                </q-item>
+
+                <q-item clickable v-ripple to="/produtos">
+                  <q-item-section avatar>
+                    <q-icon name="shopping_bag" />
+                  </q-item-section>
+
+                  <q-item-section>
+                    Produtos
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-expansion-item>
 
             <q-item clickable v-ripple to="/pagamentos">
               <q-item-section avatar>

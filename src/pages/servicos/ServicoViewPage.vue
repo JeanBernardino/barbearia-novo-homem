@@ -1,11 +1,14 @@
 <template>
   <q-page class="q-pa-md">
     <q-table
-      class="my-table"
       :rows="servicos"
       :columns="columns"
-      row-key="nome"
+      row-key="id"
       :loading="loading"
+      :virtual-scroll="true" 
+      :virtual-scroll-item-size="50"
+      :rows-per-page-options="[0]"
+      style="height: 90vh;"
     >
       <template v-slot:top>
         <strong class="q-font-size-lg">Serviços</strong>
@@ -28,14 +31,13 @@
             R$ {{ props.row.valor }}
           </q-td>
           <q-td :props="props" key="actions">
-            <!-- <q-btn @click="editServico(props.row.id)" icon="edit" color="primary" flat /> -->
+            <q-btn @click="editServico(props.row.id)" icon="edit" color="primary" flat />
             <q-btn @click="openConfirmDialog(props.row.id)" icon="delete" color="negative" flat />
           </q-td>
         </q-tr>
       </template>
     </q-table>
   </q-page>
-
 
   <!-- ConfirmDialog Component -->
   <ConfirmDialog 
@@ -44,47 +46,48 @@
     :onConfirm="handleConfirm"
     :onClose="handleClose"
   />
-
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-//import { useRouter } from 'vue-router';
-import { useServicoStore } from 'src/stores/global/ServicoStore'
+import { useRouter } from 'vue-router';
+import { useServicoStore } from 'src/stores/servicos/ServicoStore'
+import type { ServicoModel } from 'src/models/servicos/ServicoModel';
 
 const servicoStore = useServicoStore()
-//const router = useRouter()
+const router = useRouter()
 
 const loading = ref(false)
 const servicos = computed(() => servicoStore.getAllServicos)
 
 const showDialog = ref(false);
-const serviceIdToRemove = ref<string | null>(null); // Armazena o id do serviço a ser removido
+const serviceIdToRemove = ref<string | null>(null);
 
-const columns: { 
+const columns: {
   name: string;
   label: string;
   align: "left" | "right" | "center";
-  field: string;
+  field: (row: ServicoModel) => string | number; // Tipo corrigido
+  sortable: boolean;
 }[] = [
-  { name: 'nome', label: 'Nome', align: 'left', field: 'nome' },
-  { name: 'valor', label: 'Preço', align: 'right', field: 'valor' },
-  { name: 'actions', label: 'Ações', align: 'center', field: 'actions' }
-]
+  { name: "nome", label: "Nome", align: "left", field: (row) => row.nome, sortable: true },
+  { name: "valor", label: "Preço", align: "right", field: (row) => row.valor, sortable: true }, // Agora corretamente tipado como número
+  { name: "actions", label: "Ações", align: "center", field: () => "", sortable: false }
+];
 
 onMounted(async () => {
   loading.value = true
-  await servicoStore.loadServicos()
+  await servicoStore.loadAllServicos()
   loading.value = false
 });
 
 const addServico = async () => {
-  //router.push('servicos')
+  await router.push('servico')
 };
 
-// const editServico = async (id: string) => {
-//   await servicoStore.editServico(id, nome.value, valor.value)
-// };
+const editServico = async (id: string) => {
+  await router.push(`servico/${id}`)
+};
 
 const openConfirmDialog = (id: string) => {
   serviceIdToRemove.value = id;
@@ -94,13 +97,11 @@ const openConfirmDialog = (id: string) => {
 const handleConfirm = async () => {
   if (serviceIdToRemove.value) {
     await servicoStore.removeServico(serviceIdToRemove.value);
-    console.log("Serviço removido!");
   }
-  showDialog.value = false; // Fecha o diálogo após confirmação
+  showDialog.value = false;
 }
 
 function handleClose() {
-  console.log("Cancelado!");
-  showDialog.value = false; // Fecha o diálogo
+  showDialog.value = false;
 }
 </script>

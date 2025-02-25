@@ -7,10 +7,20 @@ const routes: RouteRecordRaw[] = [
     children: [
       { path: '', component: () => import('pages/IndexPage.vue') },
       { path: '/usuarios', component: () => import('pages/UsuarioPage.vue'), meta: { requiresAuth: true } },
+      
       { path: '/funcionarios', component: () => import('pages/FuncionarioPage.vue'), meta: { requiresAuth: true } },
-      { path: '/servicos', component: () => import('src/pages/servico/ServicoPage.vue'), meta: { requiresAuth: true }},
-      { path: '/pagamentos', component: () => import('pages/PagamentoPage.vue'), meta: { requiresAuth: true } },
-      { path: '/produtos', component: () => import('pages/ProdutoPage.vue'), meta: { requiresAuth: true } }
+
+      { path: '/servicos', component: () => import('pages/servicos/ServicoViewPage.vue'), meta: { requiresAuth: true }},
+      { path: '/servico/:id?', component: () => import('pages/servicos/ServicoCadastroPage.vue'), meta: { requiresAuth: true } },
+
+      { path: '/pagamentos', component: () => import('pages/pagamentos/PagamentoViewPage.vue'), meta: { requiresAuth: true } },
+      { path: '/pagamento/:id?', component: () => import('pages/pagamentos/PagamentoCadastroPage.vue'), meta: { requiresAuth: true } },
+
+      { path: '/produtos', component: () => import('pages/produtos/ProdutoViewPage.vue'), meta: { requiresAuth: true } },
+      { path: '/produto/:id?', component: () => import('pages/produtos/ProdutoCadastroPage.vue'), meta: { requiresAuth: true } },
+
+      { path: '/categorias', component: () => import('pages/categorias/CategoriaViewPage.vue'), meta: { requiresAuth: true } },
+      { path: '/categoria/:id?', component: () => import('pages/categorias/CategoriaCadastroPage.vue'), meta: { requiresAuth: true } },
     ],
     meta: { requiresAuth: true }
   },
