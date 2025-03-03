@@ -50,7 +50,7 @@ export const useServicoStore = defineStore('servico', {
 
     async updateServico(servico: ServicoModel) {
       try {
-        await servicoService.update(servico.id, { nome: servico.nome, valor: servico.valor, flagCombo: servico.flagCombo });
+        await servicoService.update(servico.id, { nome: servico.nome, valor: servico.valor, ativo: servico.ativo, flagCombo: servico.flagCombo });
         const index = this.servicos.findIndex(item => item.id === servico.id);
         if (index !== -1) this.servicos[index] = { ...servico };
       } catch (error) {
@@ -58,22 +58,33 @@ export const useServicoStore = defineStore('servico', {
       }
     },
 
-    async removeServico(id: string) {
+    async changeStatusServico(id: string) {
       try {
-        await servicoService.remove(id);
-        this.servicos = this.servicos.filter(servico => servico.id !== id);
+        const servico = this.servicos.find(servico => servico.id === id);
+
+        if (!servico) {
+          Notify.create({
+            message: "Servico não encontrado!",
+            type: "negative",
+          });
+          return;
+        }
+
+        servico.ativo = !servico.ativo;
+        await this.updateServico(servico);
+
         Notify.create({
-          message: "Serviço excluído com sucesso!",
-          type: "positive"
-        })
+          message: servico.ativo ? "Serviço ativado com sucesso!" : "Servico inativado com sucesso!",
+          type: "positive",
+        });
       } catch (error) {
-        console.error("Erro ao remover serviço:", error);
+        console.error(error);
         Notify.create({
-          message: "Não foi possível remover o servico!",
-          type: "negative"
-        })
+          message: "Não foi possível alterar o status do serviço!",
+          type: "negative",
+        });
       }
-    }
+    },
   }
 });
 

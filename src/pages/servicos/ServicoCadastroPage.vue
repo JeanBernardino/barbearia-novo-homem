@@ -27,15 +27,25 @@
 
                     <q-toggle
                         class="q-mb-md"
+                        v-model="servico.ativo"
+                        label="Status"
+                    >
+                        <q-tooltip>
+                            Usada para ativar ou inativar o serviço.
+                        </q-tooltip>
+                    </q-toggle>
+
+                    <q-toggle
+                        class="q-mb-md"
                         v-model="servico.flagCombo"
                         label="Combo"
                     >
                         <q-tooltip>
-                            Usada para transformar este serviço em um combo
+                            Usado para transformar este serviço em um combo.
                         </q-tooltip>
                     </q-toggle>
 
-                    <q-btn color="primary" icon="check" label="Salvar" @click="saveServico" />
+                    <q-btn color="primary" icon="check" label="Salvar" @click="onSave" />
                 </div>
             </div>
         </q-form>
@@ -51,7 +61,7 @@ import { Notify, QForm } from 'quasar';
 
 const route = useRoute();
 const router = useRouter();
-const servicoStore = useServicoStore()
+const store = useServicoStore()
 const crudForm = ref<QForm>()
 
 const servico = ref<ServicoModel>({
@@ -60,6 +70,7 @@ const servico = ref<ServicoModel>({
     alteracaoUsuario: '',
     cadastroData: null,
     cadastroUsuario: '',
+    ativo: true,
     nome: '',
     valor: 0,
     flagCombo: false
@@ -68,28 +79,29 @@ const servico = ref<ServicoModel>({
 onMounted(async () => {
     const id = route.params.id as string | undefined;
     if (id) {
-        const servicoEncontrado = await servicoStore.getServicoById(id);
-        if (servicoEncontrado) {
-            servico.value = { ...servicoEncontrado };
+        const model = await store.getServicoById(id);
+        if (model) {
+            servico.value = { ...model };
         } else {
             Notify.create({
-                message: 'Serviço não encontrado',
+                message: 'Serviço não encontrado.',
                 type: 'negative'
-            })
+            });
+            await router.push('/servicos');
         }
     }
 });
 
-const saveServico = async () => {
+const onSave = async () => {
     const isValid = await crudForm.value?.validate(true);
     if (crudForm.value && !isValid) {
         return;
     }
 
     if (servico.value.id) {
-        await servicoStore.updateServico(servico.value);
+        await store.updateServico(servico.value);
     } else {
-        await servicoStore.addServico(servico.value);
+        await store.addServico(servico.value);
     }
     await router.push('/servicos');
 };

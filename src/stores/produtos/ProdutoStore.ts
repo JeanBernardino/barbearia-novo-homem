@@ -50,7 +50,7 @@ export const useProdutoStore = defineStore('produto', {
 
     async updateProduto(produto: ProdutoModel) {
       try {
-        await produtoService.update(produto.id, { nome: produto.nome, valor: produto.valor, categoria_id: produto.categoria_id });
+        await produtoService.update(produto.id, { nome: produto.nome, valor: produto.valor, categoria_id: produto.categoria_id, ativo: produto.ativo });
         const index = this.produtos.findIndex(item => item.id === produto.id);
         if (index !== -1) this.produtos[index] = { ...produto };
       } catch (error) {
@@ -58,22 +58,34 @@ export const useProdutoStore = defineStore('produto', {
       }
     },
 
-    async removeProduto(id: string) {
+    async changeStatusProduto(id: string) {
       try {
-        await produtoService.remove(id);
-        this.produtos = this.produtos.filter(produto => produto.id !== id);
+        const produto = this.produtos.find(produto => produto.id === id);
+        
+        console.log(produto)
+        if (!produto) {
+          Notify.create({
+            message: "Produto não encontrado!",
+            type: "negative",
+          });
+          return;
+        }
+
+        produto.ativo = !produto.ativo;
+        await this.updateProduto(produto);
+
         Notify.create({
-          message: "Produto excluído com sucesso!",
-          type: "positive"
-        })
+          message: produto.ativo ? "Produto ativado com sucesso!" : "Produto inativado com sucesso!",
+          type: "positive",
+        });
       } catch (error) {
-        console.error("Erro ao remover produto:", error);
+        console.error(error);
         Notify.create({
-          message: "Não foi possível remover o produto!",
-          type: "negative"
-        })
+          message: "Não foi possível alterar o status do produto!",
+          type: "negative",
+        });
       }
-    }
+    },
   }
 });
 

@@ -3,27 +3,28 @@
         <q-form ref="crudForm">
             <div class="column">
                 <div class="column">
-                    <q-input 
-                        class="q-mb-md"
-                        v-model="categoria.nome" 
-                        type="text" 
-                        label="Nome" 
-                        :rules="[
-                            val => !!val || 'Necessário informar um nome.',
-                        ]"
-                        outlined
-                    />
+                    <div class="q-mb-md">
+                        <q-input 
+                            v-model="funcionario.nome" 
+                            type="text" 
+                            label="Nome" 
+                            :rules="[
+                                val => !!val || 'Necessário informar um nome.',
+                            ]"
+                            outlined
+                        />
+                    </div>
 
                     <q-toggle
                         class="q-mb-md"
-                        v-model="categoria.ativo"
+                        v-model="funcionario.ativo"
                         label="Status"
                     >
                         <q-tooltip>
-                            Usada para ativar ou inativar a categoria.
+                            Usada para ativar ou inativar o funcionário.
                         </q-tooltip>
                     </q-toggle>
-                    
+
                     <q-btn color="primary" icon="check" label="Salvar" @click="onSave" />
                 </div>
             </div>
@@ -34,37 +35,37 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
-import { useCategoriaStore } from 'src/stores/categorias/CategoriaStore'
-import type { CategoriaModel } from 'src/models/categorias/CategoriaModel';
+import { useFuncionarioStore } from 'src/stores/funcionarios/FuncionarioStore'
+import type { FuncionarioModel } from 'src/models/funcionarios/FuncionarioModel';
 import { Notify, QForm } from 'quasar';
 
 const route = useRoute();
 const router = useRouter();
-const store = useCategoriaStore()
+const store = useFuncionarioStore()
 const crudForm = ref<QForm>()
 
-const categoria = ref<CategoriaModel>({
+const funcionario = ref<FuncionarioModel>({
     id: '',
     alteracaoData: null,
     alteracaoUsuario: '',
     cadastroData: null,
     cadastroUsuario: '',
     ativo: true,
-    nome: ''
+    nome: '',
 });
 
 onMounted(async () => {
     const id = route.params.id as string | undefined;
     if (id) {
-        const model = await store.getCategoriaById(id);
+        const model = await store.getFuncionarioById(id);
         if (model) {
-            categoria.value = { ...model };
+            funcionario.value = { ...model };
         } else {
             Notify.create({
-                message: 'Categoria não encontrada.',
+                message: 'Funcionário não encontrado.',
                 type: 'negative'
             })
-            await router.push('/categorias');
+            await router.push('/funcionarios');
         }
     }
 });
@@ -75,11 +76,11 @@ const onSave = async () => {
         return;
     }
 
-    if (categoria.value.id) {
-        await store.updateCategoria(categoria.value);
+    if (funcionario.value.id) {
+        await store.updateFuncionario(funcionario.value);
     } else {
-        await store.addCategoria(categoria.value);
+        await store.addFuncionario(funcionario.value);
     }
-    await router.push('/categorias');
+    await router.push('/funcionarios');
 };
 </script>

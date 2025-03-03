@@ -50,7 +50,7 @@ export const useCategoriaStore = defineStore('categoria', {
 
     async updateCategoria(categoria: CategoriaModel) {
       try {
-        await categoriaService.update(categoria.id, { nome: categoria.nome });
+        await categoriaService.update(categoria.id, { nome: categoria.nome, ativo: categoria.ativo });
         const index = this.categorias.findIndex(item => item.id === categoria.id);
         if (index !== -1) this.categorias[index] = { ...categoria };
       } catch (error) {
@@ -58,22 +58,34 @@ export const useCategoriaStore = defineStore('categoria', {
       }
     },
 
-    async removeCategoria(id: string) {
+    async changeStatusCategoria(id: string) {
       try {
-        await categoriaService.remove(id);
-        this.categorias = this.categorias.filter(categoria => categoria.id !== id);
+        const categoria = this.categorias.find(categoria => categoria.id === id);
+        
+        console.log(categoria)
+        if (!categoria) {
+          Notify.create({
+            message: "Categoria não encontrada!",
+            type: "negative",
+          });
+          return;
+        }
+
+        categoria.ativo = !categoria.ativo;
+        await this.updateCategoria(categoria);
+
         Notify.create({
-          message: "Categoria excluído com sucesso!",
-          type: "positive"
-        })
+          message: categoria.ativo ? "Categoria ativada com sucesso!" : "Categoria inativada com sucesso!",
+          type: "positive",
+        });
       } catch (error) {
-        console.error("Erro ao remover categoria:", error);
+        console.error(error);
         Notify.create({
-          message: "Não foi possível remover o categoria!",
-          type: "negative"
-        })
+          message: "Não foi possível alterar o status da categoria!",
+          type: "negative",
+        });
       }
-    }
+    },
   }
 });
 

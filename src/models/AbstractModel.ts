@@ -4,4 +4,5 @@ export interface AbstractModel {
     alteracaoUsuario: string | null;
     cadastroData: Date | null;
     cadastroUsuario: string | null;
+    ativo: boolean;
 }

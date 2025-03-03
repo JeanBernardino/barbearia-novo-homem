@@ -50,7 +50,7 @@ export const usePagamentoStore = defineStore('pagamento', {
 
     async updatePagamento(pagamento: PagamentoModel) {
       try {
-        await pagamentoService.update(pagamento.id, { nome: pagamento.nome });
+        await pagamentoService.update(pagamento.id, { nome: pagamento.nome, ativo: pagamento.ativo });
         const index = this.pagamentos.findIndex(item => item.id === pagamento.id);
         if (index !== -1) this.pagamentos[index] = { ...pagamento };
       } catch (error) {
@@ -58,22 +58,34 @@ export const usePagamentoStore = defineStore('pagamento', {
       }
     },
 
-    async removePagamento(id: string) {
+    async changeStatusPagamento(id: string) {
       try {
-        await pagamentoService.remove(id);
-        this.pagamentos = this.pagamentos.filter(pagamento => pagamento.id !== id);
+        const pagamento = this.pagamentos.find(pagamento => pagamento.id === id);
+        
+        console.log(pagamento)
+        if (!pagamento) {
+          Notify.create({
+            message: "Pagamento não encontrado!",
+            type: "negative",
+          });
+          return;
+        }
+
+        pagamento.ativo = !pagamento.ativo;
+        await this.updatePagamento(pagamento);
+
         Notify.create({
-          message: "Pagamento excluído com sucesso!",
-          type: "positive"
-        })
+          message: pagamento.ativo ? "Pagamento ativado com sucesso!" : "Pagamento inativado com sucesso!",
+          type: "positive",
+        });
       } catch (error) {
-        console.error("Erro ao remover pagamento:", error);
+        console.error(error);
         Notify.create({
-          message: "Não foi possível remover o pagamento!",
-          type: "negative"
-        })
+          message: "Não foi possível alterar o status do pagamento!",
+          type: "negative",
+        });
       }
-    }
+    },
   }
 });
 
