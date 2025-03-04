@@ -15,15 +15,16 @@
                         />
                     </div>
 
-                    <q-toggle
-                        class="q-mb-md"
-                        v-model="funcionario.ativo"
-                        label="Status"
-                    >
-                        <q-tooltip>
-                            Usada para ativar ou inativar o funcionário.
-                        </q-tooltip>
-                    </q-toggle>
+                    <div class="q-mb-md">
+                        <q-toggle
+                            v-model="funcionario.ativo"
+                            label="Status"
+                        >
+                            <q-tooltip>
+                                Usada para ativar ou inativar o funcionário.
+                            </q-tooltip>
+                        </q-toggle>
+                    </div>
 
                     <q-btn color="primary" icon="check" label="Salvar" @click="onSave" />
                 </div>
