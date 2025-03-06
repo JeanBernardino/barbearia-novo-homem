@@ -13,10 +13,24 @@ export const useComissaoStore = defineStore('comissao', {
 
   getters: {
     getAllComissoes: (state) => state.comissoes,
+
+    getComissoesByFuncionarioId: (state) => {
+      return (funcionarioId: string): ComissaoModel[] => {
+        return state.comissoes.filter(comissao => comissao.funcionario_id === funcionarioId);
+      };
+    },
+
+    getComissoesByServicoIdAndFuncionarioId: (state) => {
+      return (servicoId: string, funcionarioId: string): ComissaoModel[] => {
+        return state.comissoes.filter(comissao => 
+          comissao.servico_id === servicoId && comissao.funcionario_id === funcionarioId
+        );
+      };
+    }
   },
 
   actions: {
-    async loadAllFuncionarios() {
+    async loadAllComissoes() {
       try {
         this.comissoes = await comissaoService.getAll();
       } catch (error) {
@@ -38,35 +52,11 @@ export const useComissaoStore = defineStore('comissao', {
       }
     },
 
-    async getComissaoByFuncionarioId(id: string): Promise<ComissaoModel[]> {
-      try {
-        const comissoes = await comissaoService.getComissoesByFuncionarioId(id);
-
-        comissoes.forEach(comissao => {
-          const exists = this.comissoes.some(s => s.id === comissao.id);
-          if (!exists) this.comissoes.push(comissao);
-        });
-
-        return comissoes;
-      } catch (error) {
-        console.error("Erro ao buscar comissões do funcionário:", error);
-        return [];
-      }
-    },
-
-    async getComissaoByServicoId(id: string): Promise<ComissaoModel[]> {
-      try {
-        const comissoes = await comissaoService.getComissoesByServicoId(id);
-
-        comissoes.forEach(comissao => {
-          const exists = this.comissoes.some(s => s.id === comissao.id);
-          if (!exists) this.comissoes.push(comissao);
-        });
-
-        return comissoes;
-      } catch (error) {
-        console.error("Erro ao buscar comissões do serviço:", error);
-        return [];
+    async saveComissao(comissao: ComissaoModel) {
+      if (comissao.id === '') {
+        await this.addComissao(comissao);
+      } else {
+        await this.updateComissao(comissao);
       }
     },
 
@@ -87,8 +77,18 @@ export const useComissaoStore = defineStore('comissao', {
       } catch (error) {
         console.error("Erro ao editar comissão:", error);
       }
-    }
+    },
 
+    async removeComissao(comissaoId: string) {
+      try {
+        await comissaoService.remove(comissaoId);
+    
+        this.comissoes = this.comissoes.filter(item => item.id !== comissaoId);
+      } catch (error) {
+        console.error("Erro ao remover comissão:", error);
+      }
+    }
+    
   }
 });
 

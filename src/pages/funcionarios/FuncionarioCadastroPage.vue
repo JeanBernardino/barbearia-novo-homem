@@ -26,23 +26,40 @@
                         </q-toggle>
                     </div>
 
+                    <div class="q-mb-md" v-show="showComissoes">
+                        <q-btn 
+                            color="secondary" 
+                            icon="attach_money" 
+                            label="Gerenciar Comissões" 
+                            @click="exibirDialogComissoes = true" 
+                        />
+                    </div>
+
                     <q-btn color="primary" icon="check" label="Salvar" @click="onSave" />
                 </div>
             </div>
         </q-form>
     </q-page>
+
+    <q-dialog v-model="exibirDialogComissoes">
+        <ComissaoCard 
+            :funcionario="funcionario"
+            @close-dialog="exibirDialogComissoes = false"
+        />
+    </q-dialog>
+
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
-import { useFuncionarioStore } from 'src/stores/funcionarios/FuncionarioStore'
-import type { FuncionarioModel } from 'src/models/funcionarios/FuncionarioModel';
 import { Notify, QForm } from 'quasar';
+import { useFuncionarioStore } from 'src/stores/funcionarios/FuncionarioStore';
+import type { FuncionarioModel } from 'src/models/funcionarios/FuncionarioModel';
 
 const route = useRoute();
 const router = useRouter();
-const store = useFuncionarioStore()
+const store = useFuncionarioStore();
 const crudForm = ref<QForm>()
 
 const funcionario = ref<FuncionarioModel>({
@@ -54,6 +71,8 @@ const funcionario = ref<FuncionarioModel>({
     ativo: true,
     nome: '',
 });
+
+const exibirDialogComissoes = ref(false);
 
 onMounted(async () => {
     const id = route.params.id as string | undefined;
@@ -69,7 +88,12 @@ onMounted(async () => {
             await router.push('/funcionarios');
         }
     }
+
 });
+
+const showComissoes = () => {
+    return funcionario.value.id !== null;
+};
 
 const onSave = async () => {
     const isValid = await crudForm.value?.validate(true);
@@ -84,4 +108,5 @@ const onSave = async () => {
     }
     await router.push('/funcionarios');
 };
+
 </script>
