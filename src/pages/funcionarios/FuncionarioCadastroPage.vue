@@ -54,8 +54,8 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
 import { Notify, QForm } from 'quasar';
-import { useFuncionarioStore } from 'src/stores/funcionarios/FuncionarioStore';
 import type { FuncionarioModel } from 'src/models/funcionarios/FuncionarioModel';
+import { useFuncionarioStore } from 'src/stores/funcionarios/FuncionarioStore';
 
 const route = useRoute();
 const router = useRouter();

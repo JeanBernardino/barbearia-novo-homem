@@ -12,7 +12,9 @@
         />
 
         <q-toolbar-title>
-          Barbearia Novo Homem
+          <router-link to="/" style="text-decoration: none; color: inherit;">
+            Barbearia Novo Homem
+          </router-link>
         </q-toolbar-title>
       </q-toolbar>
     </q-header>
@@ -25,7 +27,7 @@
       <q-scroll-area class="fit">
           <!-- Menu Principal -->
           <q-list padding class="menu-list fit">
-            <q-item clickable v-ripple to="/usuarios">
+            <q-item clickable v-ripple to="/usuarios" v-show="user?.tipo === UsuarioTipo.ADMIN">
               <q-item-section avatar>
                 <q-icon name="person" />
               </q-item-section>
@@ -35,7 +37,7 @@
               </q-item-section>
             </q-item>
 
-            <q-item clickable v-ripple to="/funcionarios">
+            <q-item clickable v-ripple to="/funcionarios" v-show="user?.tipo === UsuarioTipo.ADMIN">
               <q-item-section avatar>
                 <q-icon name="badge" />
               </q-item-section>
@@ -45,7 +47,7 @@
               </q-item-section>
             </q-item>
 
-            <q-item clickable v-ripple to="/servicos">
+            <q-item clickable v-ripple to="/servicos" v-show="user?.tipo === UsuarioTipo.ADMIN">
               <q-item-section avatar>
                 <q-icon name="fact_check" />
               </q-item-section>
@@ -59,9 +61,10 @@
               expand-separator
               icon="inventory"
               label="Produtos"
+              v-show="user?.tipo === UsuarioTipo.ADMIN"
             >
               <q-list>
-                <q-item clickable v-ripple to="/categorias">
+                <q-item clickable v-ripple to="/categorias" >
                   <q-item-section avatar>
                     <q-icon name="category" />
                   </q-item-section>
@@ -83,7 +86,7 @@
               </q-list>
             </q-expansion-item>
 
-            <q-item clickable v-ripple to="/pagamentos">
+            <q-item clickable v-ripple to="/pagamentos" v-show="user?.tipo === UsuarioTipo.ADMIN">
               <q-item-section avatar>
                 <q-icon name="payments" />
               </q-item-section>
@@ -113,15 +116,17 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from 'src/stores/global/AuthStore';
+import { useAuthStore } from 'src/stores/usuarios/AuthStore';
 import { ref } from 'vue';
 import { Notify } from 'quasar';
 import { useRouter } from 'vue-router';
+import { UsuarioTipo } from 'src/models/usuarios/UsuarioTipo';
 
 const leftDrawerOpen = ref(false);
 const authStore = useAuthStore();
 
 const router = useRouter()
+const user = authStore.user;
 
 function toggleLeftDrawer () {
   leftDrawerOpen.value = !leftDrawerOpen.value;

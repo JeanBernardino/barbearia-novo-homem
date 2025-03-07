@@ -17,7 +17,7 @@
 
               <PasswordInput v-model="password" :rules="[
                   val => !!val || 'Necessário informar um usuário.',
-                  val => val.length > 8 || 'A senha informada é muito curta.',
+                  val => val.length >= 8 || 'A senha informada é muito curta.',
                 ]"
               />
             </q-form>
@@ -36,7 +36,7 @@
 import { ref } from 'vue';
 import { QForm, Notify } from 'quasar';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from 'src/stores/global/AuthStore';
+import { useAuthStore } from 'src/stores/usuarios/AuthStore';
 
 const email = ref<string>("")
 const password = ref<string>("")
@@ -56,13 +56,13 @@ const onLogin = async () => {
     Notify.create({
       message: 'Login realizado com sucesso.',
       type: 'positive'
-    })
-    await router.push('/')
+    });
+    await router.push('/');
   } catch {
     Notify.create({
       message: 'Usuário ou senha inválidos.',
       type: 'negative'
-    })
+    });
   }
 }
 
