@@ -16,15 +16,28 @@
                     <div class="q-mb-md">
                         <q-select 
                             outlined 
-                            v-model="trabalho.funcionario_id" 
-                            :options="funcionarios" 
-                            label="Funcionario"
+                            v-model="venda.produto_id" 
+                            :options="produtos" 
+                            label="Produto"
                             option-value="id"
                             option-label="nome"
                             emit-value
                             map-options
                             :rules="[
-                                val => !!val || 'Necessário selecionar um funcionário.',
+                                val => !!val || 'Necessário selecionar um produto.',
+                            ]"
+                        />
+                    </div>
+
+                    <div class="q-mb-md">
+                        <q-input 
+                            v-model="venda.quantidade" 
+                            type="text" 
+                            label="Quantidade"
+                            outlined
+                            :rules="[
+                                val => !!val || 'Necessário informar um valor.',
+                                val => val > 0 || 'Necessário informar um valor maior que 0.',
                             ]"
                         />
                     </div>
@@ -32,23 +45,7 @@
                     <div class="q-mb-md">
                         <q-select 
                             outlined 
-                            v-model="trabalho.servico_id" 
-                            :options="servicos" 
-                            label="Serviço"
-                            option-value="id"
-                            option-label="nome"
-                            emit-value
-                            map-options
-                            :rules="[
-                                val => !!val || 'Necessário selecionar um serviço.',
-                            ]"
-                        />
-                    </div>
-
-                    <div class="q-mb-md">
-                        <q-select 
-                            outlined 
-                            v-model="trabalho.pagamento_id" 
+                            v-model="venda.pagamento_id" 
                             :options="pagamentos" 
                             label="Pagamento"
                             option-value="id"
@@ -71,46 +68,37 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { QForm, Notify } from 'quasar';
-import { useFuncionarioStore } from 'src/stores/funcionarios/FuncionarioStore';
-import { useServicoStore } from 'src/stores/servicos/ServicoStore';
 import { usePagamentoStore } from 'src/stores/pagamentos/PagamentoStore';
-import { useTrabalhoStore } from 'src/stores/trabalhos/TrabalhoStore';
-import type { TrabalhoModel } from 'src/models/trabalhos/TrabalhoModel';
-import { useComissaoStore } from 'src/stores/comissoes/ComissaoStore';
+import { useVendatore } from 'src/stores/vendas/VendaStore';
+import { useProdutoStore } from 'src/stores/produtos/ProdutoStore';
+import type { VendaModel } from 'src/models/vendas/VendaModel';
 
-const store = useTrabalhoStore();
-const funcionarioStore = useFuncionarioStore();
-const servicoStore = useServicoStore();
+const store = useVendatore();
+const produtoStore = useProdutoStore();
 const pagamentoStore = usePagamentoStore();
-const comissaoStore = useComissaoStore();
 const crudForm = ref<QForm>();
 
-const funcionarios = computed(() => funcionarioStore.getAllFuncionariosAtivos);
-const servicos = computed(() => servicoStore.getAllServicosAtivos);
+const produtos = computed(() => produtoStore.getAllProdutosAtivos);
 const pagamentos = computed(() => pagamentoStore.getAllPagamentosAtivos);
-const comissoes = computed(() => comissaoStore.getAllComissoes);
 const loading = ref(true);
 
-const trabalhoInicial= {
+const vendaInicial = {
     id: '',
     alteracaoData: null,
     alteracaoUsuario: '',
     cadastroData: null,
     cadastroUsuario: '',
     ativo: true,
-    funcionario_id: '',
-    servico_id: '',
+    produto_id: '',
+    produto_valor: 0,
     pagamento_id: '',
-    funcionario_comissao: 0,
-    servico_valor: 0,
+    quantidade: 1
 };
-const trabalho = ref<TrabalhoModel>({...trabalhoInicial});
+const venda = ref<VendaModel>({...vendaInicial});
 
 onMounted(async () => {
-    await funcionarioStore.loadAllFuncionarios();
-    await servicoStore.loadAllServicos();
+    await produtoStore.loadAllProdutos();
     await pagamentoStore.loadAllPagamentos();
-    await comissaoStore.loadAllComissoes();
     loading.value = false;
 });
 
@@ -121,30 +109,24 @@ const onSave = async () => {
             return;
         }
 
-        const funcionario_id = trabalho.value.funcionario_id;
-        const servico_id = trabalho.value.servico_id;
+        const produto_id = venda.value.produto_id;
 
-        const servicoSelecionado = servicos.value.find(s => s.id === servico_id);
-        if (servicoSelecionado) {
-            trabalho.value.servico_valor = servicoSelecionado.valor;
+        const produtoSelecionado = produtos.value.find(p => p.id === produto_id);
+        if (produtoSelecionado) {
+            venda.value.produto_valor = produtoSelecionado.valor;
         }
 
-        const comissaoFuncionario = comissoes.value.find(c => c.servico_id === servico_id && c.funcionario_id === funcionario_id);
-        if (comissaoFuncionario) {
-            trabalho.value.funcionario_comissao = comissaoFuncionario.valor;
-        }
-
-        await store.addTrabalho(trabalho.value);
-        trabalho.value = {...trabalhoInicial};
+        await store.addVenda(venda.value);
+        venda.value = {...vendaInicial};
 
         Notify.create({
-            message: 'Trabalho salvo com sucesso!',
+            message: 'Venda salva com sucesso!',
             type: 'positive'
         });
     } catch (error) {
         console.log(error);
         Notify.create({
-            message: 'Não foi possível salvar o trabalho!',
+            message: 'Não foi possível salvar a venda!',
             type: 'negative'
         });
     }

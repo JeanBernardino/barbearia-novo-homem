@@ -9,20 +9,21 @@
       align="justify"
     >
       <q-tab name="trabalho" label="Trabalho" icon="work" />
-      <q-tab name="produto" label="Produto" icon="inventory" />
+      <q-tab name="venda" label="Venda" icon="inventory" />
     </q-tabs>
 
     <q-tab-panels v-model="tab" 
       animated
       swipeable
       infinite
+      class="fit"
     >
       <q-tab-panel name="trabalho">
-        <TrabalhoTabContent />
+        <TrabalhoTabContent class="fit" />
       </q-tab-panel>
 
-      <q-tab-panel name="produto">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+      <q-tab-panel name="venda">
+        <VendaTabContent class="fit" />
       </q-tab-panel>
     </q-tab-panels>
   </q-page>

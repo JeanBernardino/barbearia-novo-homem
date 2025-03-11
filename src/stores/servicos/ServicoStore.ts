@@ -14,6 +14,7 @@ export const useServicoStore = defineStore('servico', {
 
   getters: {
     getAllServicos: (state) => state.servicos,
+    getAllServicosAtivos: (state) => state.servicos.filter(p => p.ativo),
   },
 
   actions: {

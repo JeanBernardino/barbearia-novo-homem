@@ -14,6 +14,7 @@ export const useFuncionarioStore = defineStore('funcionario', {
 
   getters: {
     getAllFuncionarios: (state) => state.funcionarios,
+    getAllFuncionariosAtivos: (state) => state.funcionarios.filter(f => f.ativo),
   },
 
   actions: {

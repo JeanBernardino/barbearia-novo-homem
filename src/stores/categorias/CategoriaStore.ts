@@ -14,6 +14,7 @@ export const useCategoriaStore = defineStore('categoria', {
 
   getters: {
     getAllCategorias: (state) => state.categorias,
+    getAllCategoriasAtivas: (state) => state.categorias.filter(c => c.ativo),
   },
 
   actions: {

@@ -4,18 +4,31 @@
       <q-page padding class="flex justify-center items-center bg-primary">
         <q-card class="bg-white login-card">
           <q-card-section class="text-center">
-            <div><h6>Login</h6></div>
+            <q-img 
+              src="/logo.jpg" 
+              alt="Logo" 
+              class="logo" 
+              fit="contain" 
+              width="120px" 
+            />
           </q-card-section>
           <q-separator />
           <q-card-section>
             <q-form class="q-gutter-y-md" ref="loginForm">
-              <q-input v-model="email" type="email" label="E-mail" outlined :rules="[
+              <q-input 
+                v-model="email" 
+                type="email" 
+                label="E-mail" 
+                outlined 
+                :rules="[
                   val => !!val || 'Necessário informar um usuário.',
                   'email'
                 ]"
               />
 
-              <PasswordInput v-model="password" :rules="[
+              <PasswordInput 
+                v-model="password" 
+                :rules="[
                   val => !!val || 'Necessário informar um usuário.',
                   val => val.length >= 8 || 'A senha informada é muito curta.',
                 ]"

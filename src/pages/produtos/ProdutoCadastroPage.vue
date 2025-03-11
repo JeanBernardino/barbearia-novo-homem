@@ -79,7 +79,7 @@ const store = useProdutoStore();
 const categoriaStore = useCategoriaStore();
 const crudForm = ref<QForm>();
 
-const categorias = computed(() => categoriaStore.getAllCategorias);
+const categorias = computed(() => categoriaStore.getAllCategoriasAtivas);
 
 const produto = ref<ProdutoModel>({
   id: '',

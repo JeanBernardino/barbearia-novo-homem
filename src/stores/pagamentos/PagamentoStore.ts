@@ -14,6 +14,7 @@ export const usePagamentoStore = defineStore('pagamento', {
 
   getters: {
     getAllPagamentos: (state) => state.pagamentos,
+    getAllPagamentosAtivos: (state) => state.pagamentos.filter(p => p.ativo),
   },
 
   actions: {
