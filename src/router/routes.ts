@@ -23,6 +23,8 @@ const routes: RouteRecordRaw[] = [
 
       { path: '/categorias', component: () => import('pages/categorias/CategoriaViewPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
       { path: '/categoria/:id?', component: () => import('pages/categorias/CategoriaCadastroPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
+
+      { path: '/gestao/funcionarios', component: () => import('pages/gestao/funcionarios/GestaoFuncionarioViewPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
     ],
     meta: { requiresAuth: true }
   },

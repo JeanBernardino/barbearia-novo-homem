@@ -103,41 +103,23 @@
               v-show="user?.tipo === UsuarioTipo.ADMIN"
             >
               <q-list>
-                <q-expansion-item
-                  expand-separator
-                  icon="work"
-                  label="Trabalhos"
-                >
-                  <q-list>
-                    <q-item clickable v-ripple to="/gestao/trabalhos" >
-                      <q-item-section avatar>
-                        <q-icon name="work" />
-                      </q-item-section>
-
-                      <q-item-section>
-                        Trabalhos
-                      </q-item-section>
-                    </q-item>
-
-                    <q-item clickable v-ripple to="/gestao/vendas">
-                      <q-item-section avatar>
-                        <q-icon name="inventory" />
-                      </q-item-section>
-
-                      <q-item-section>
-                        Vendas
-                      </q-item-section>
-                    </q-item>
-                  </q-list>
-                </q-expansion-item>
-
-                <q-item clickable v-ripple to="/gestao/vendas">
+                <q-item clickable v-ripple to="/gestao/funcionarios">
                   <q-item-section avatar>
-                    <q-icon name="inventory" />
+                    <q-icon name="analytics" />
                   </q-item-section>
 
                   <q-item-section>
-                    Vendas
+                    Funcionários
+                  </q-item-section>
+                </q-item>
+
+                <q-item clickable v-ripple to="/gestao/servicos">
+                  <q-item-section avatar>
+                    <q-icon name="analytics" />
+                  </q-item-section>
+
+                  <q-item-section>
+                    Serviços
                   </q-item-section>
                 </q-item>
               </q-list>

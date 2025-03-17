@@ -38,6 +38,15 @@ export const useTrabalhoStore = defineStore('trabalho', {
       }
     },
 
+    async getTrabalhosByFuncionarioAndRangeDate(funcionarioId: string, dataInicio: Date, dataFim: Date): Promise<TrabalhoModel[]> {
+      try {
+        return trabalhoService.getTrabalhosByFuncionarioAndRangeDate(funcionarioId, dataInicio, dataFim)
+      } catch (error) {
+        console.error("Erro ao buscar trabalho:", error);
+        return [];
+      }
+    },
+
     async addTrabalho(trabalho: TrabalhoModel) {
       try {
         const newTrabalho = await trabalhoService.save(trabalho);

@@ -1,8 +1,10 @@
+import type { Timestamp } from "firebase/firestore";
+
 export interface AbstractModel {
     id: string;
-    alteracaoData: Date | null;
+    alteracaoData: Timestamp | null;
     alteracaoUsuario: string | null;
-    cadastroData: Date | null;
+    cadastroData: Timestamp | null;
     cadastroUsuario: string | null;
     ativo: boolean;
 }
