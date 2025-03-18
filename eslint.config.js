@@ -42,6 +42,8 @@ export default [
         'error',
         { prefer: 'type-imports' }
       ],
+      '@typescript-eslint/no-redundant-type-constituents': 'off', // Desabilitar a regra
+      'no-redundant-type-constituents': 'off', // Verifique se você pode também desabilitar a versão global
     }
   },
   // https://github.com/vuejs/eslint-config-typescript
@@ -80,7 +82,6 @@ export default [
     // add your custom rules here
     rules: {
       'prefer-promise-reject-errors': 'off',
-
       // allow debugger during development only
       'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
     }

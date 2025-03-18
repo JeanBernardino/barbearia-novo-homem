@@ -6,6 +6,8 @@ import {
   createWebHistory,
 } from 'vue-router';
 import routes from './routes';
+import { useAuthStore } from 'src/stores/usuarios/AuthStore';
+import { UsuarioTipo } from 'src/models/usuarios/UsuarioTipo';
 
 /*
  * If not building with SSR mode, you can
@@ -29,6 +31,23 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.VUE_ROUTER_BASE),
+  });
+
+  // Adiciona a guarda de navegação global
+  Router.beforeEach((to, from, next) => {
+    const authStore = useAuthStore();
+    const user = authStore.user;
+
+    if (to.meta.requiresAuth && !authStore.isLogged()) {
+      next('/login');
+    }
+
+    if (to.meta.requiresAdmin && user?.tipo !== UsuarioTipo.ADMIN) {
+      next('/');
+    }
+
+    
+    next();
   });
 
   return Router;

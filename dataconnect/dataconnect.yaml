@@ -1,0 +1,12 @@
+specVersion: "v1beta"
+serviceId: "barbearia-novo-homem"
+location: "us-central1"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "fdcdb"
+      cloudSql:
+        instanceId: "barbearia-novo-homem-fdc"
+      # schemaValidation: "COMPATIBLE"
+connectorDirs: ["./connector"]
