@@ -15,6 +15,7 @@
     "postinstall": "quasar prepare"
   },
   "dependencies": {
+    "@firebasegen/default-connector": "file:dataconnect-generated/js/default-connector",
     "@quasar/extras": "^1.16.4",
     "axios": "^1.7.9",
     "bcryptjs": "^3.0.2",
