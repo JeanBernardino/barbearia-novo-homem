@@ -53,7 +53,7 @@ export const useComissaoStore = defineStore('comissao', {
     },
 
     async saveComissao(comissao: ComissaoModel) {
-      if (comissao.id === '') {
+      if (comissao.id === null || comissao.id === '') {
         await this.addComissao(comissao);
       } else {
         await this.updateComissao(comissao);
@@ -71,7 +71,7 @@ export const useComissaoStore = defineStore('comissao', {
 
     async updateComissao(comissao: ComissaoModel) {
       try {
-        await comissaoService.update(comissao.id, { funcionario_id: comissao.funcionario_id, servico_id: comissao.servico_id });
+        await comissaoService.update(comissao.id, { funcionario_id: comissao.funcionario_id, servico_id: comissao.servico_id, valor: comissao.valor });
         const index = this.comissoes.findIndex(item => item.id === comissao.id);
         if (index !== -1) this.comissoes[index] = { ...comissao };
       } catch (error) {

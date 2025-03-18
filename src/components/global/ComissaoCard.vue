@@ -136,8 +136,9 @@ const onSave = async () => {
     }
 
     comissao.value.funcionario_id = props.funcionario.id;
-
-    if (comissao.value.id !== '') {
+    
+    const comissaoId = comissao.value.id;
+    if (comissaoId === null || comissaoId === '') {
         const comissaoExistente = comissaoStore.getComissoesByServicoIdAndFuncionarioId(comissao.value.servico_id, comissao.value.funcionario_id);
         if (comissaoExistente.length === 0) {
             await saveComissao();

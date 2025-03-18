@@ -38,7 +38,7 @@ export const useTrabalhoStore = defineStore('trabalho', {
       }
     },
 
-    async getTrabalhosByFuncionarioAndRangeDate(funcionarioId: string, dataInicio: Date, dataFim: Date): Promise<TrabalhoModel[]> {
+    async getTrabalhosByFuncionarioAndRangeDate(funcionarioId: string, dataInicio: string, dataFim: string): Promise<TrabalhoModel[]> {
       try {
         return trabalhoService.getTrabalhosByFuncionarioAndRangeDate(funcionarioId, dataInicio, dataFim)
       } catch (error) {

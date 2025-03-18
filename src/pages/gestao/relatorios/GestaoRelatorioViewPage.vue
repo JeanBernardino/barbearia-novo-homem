@@ -21,48 +21,11 @@
             </div>
 
             <div class="col-12 col-md-6">
-              <q-input 
-                outlined 
-                v-model="filters.startDate" 
-                mask="date" 
-                :rules="[
-                  val => !!val || 'Necessário informar uma data de início.',
-                ]"
-                >
-                <template v-slot:append>
-                  <q-icon name="event" class="cursor-pointer">
-                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                      <q-date v-model="filters.startDate" >
-                        <div class="row items-center justify-end">
-                          <q-btn v-close-popup label="Close" color="primary" flat />
-                        </div>
-                      </q-date>
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-              </q-input>
+              <q-input v-model="filters.startDate" outlined type="date" :rules="[val => !!val || 'Necessário informar uma data de fim.']"/>
             </div>
 
             <div class="col-12 col-md-6">
-              <q-input 
-                outlined 
-                v-model="filters.endDate"
-                mask="date" 
-                :rules="[
-                  val => !!val || 'Necessário informar uma data de fim.',
-                ]">
-                <template v-slot:append>
-                  <q-icon name="event" class="cursor-pointer">
-                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                      <q-date v-model="filters.endDate" >
-                        <div class="row items-center justify-end">
-                          <q-btn v-close-popup label="Close" color="primary" flat />
-                        </div>
-                      </q-date>
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-              </q-input>
+              <q-input v-model="filters.endDate" outlined type="date" :rules="[val => !!val || 'Necessário informar uma data de fim.']"/>
             </div>
           </div>
 
@@ -185,10 +148,8 @@ const onFilterConfirm = async () => {
 
     loading.value = true;
     const funcionarioId = filters.value.funcionario_id;
-    const dataInicio = new Date(filters.value.startDate);
-    const dataFim = new Date(filters.value.endDate);
 
-    const trabalhosRealizados: TrabalhoModel[] = await store.getTrabalhosByFuncionarioAndRangeDate(funcionarioId, dataInicio, dataFim);
+    const trabalhosRealizados: TrabalhoModel[] = await store.getTrabalhosByFuncionarioAndRangeDate(funcionarioId, filters.value.startDate, filters.value.endDate);
     const servicosMap = new Map<string, string>();
 
     for (const trabalho of trabalhosRealizados) {
@@ -252,6 +213,7 @@ const onFilterConfirm = async () => {
     loading.value = false;
   }
 };
+
 
 </script>
   

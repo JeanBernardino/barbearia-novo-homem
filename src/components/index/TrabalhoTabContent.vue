@@ -83,6 +83,7 @@ const funcionarioStore = useFuncionarioStore();
 const servicoStore = useServicoStore();
 const pagamentoStore = usePagamentoStore();
 const comissaoStore = useComissaoStore();
+
 const crudForm = ref<QForm>();
 
 const funcionarios = computed(() => funcionarioStore.getAllFuncionariosAtivos);

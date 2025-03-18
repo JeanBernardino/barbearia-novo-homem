@@ -103,23 +103,23 @@
               v-show="user?.tipo === UsuarioTipo.ADMIN"
             >
               <q-list>
-                <q-item clickable v-ripple to="/gestao/funcionarios">
+                <q-item clickable v-ripple to="/gestao/relatorio">
                   <q-item-section avatar>
                     <q-icon name="analytics" />
                   </q-item-section>
 
                   <q-item-section>
-                    Funcionários
+                    Relatório
                   </q-item-section>
                 </q-item>
 
-                <q-item clickable v-ripple to="/gestao/servicos">
+                <q-item clickable v-ripple to="/gestao/grafico">
                   <q-item-section avatar>
                     <q-icon name="analytics" />
                   </q-item-section>
 
                   <q-item-section>
-                    Serviços
+                    Gráfico
                   </q-item-section>
                 </q-item>
               </q-list>
