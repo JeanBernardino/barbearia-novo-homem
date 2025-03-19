@@ -23,6 +23,7 @@
                             option-label="nome"
                             emit-value
                             map-options
+                            lazy-rules
                             :rules="[
                                 val => !!val || 'Necessário selecionar um produto.',
                             ]"
@@ -35,6 +36,7 @@
                             type="text" 
                             label="Quantidade"
                             outlined
+                            lazy-rules
                             :rules="[
                                 val => !!val || 'Necessário informar um valor.',
                                 val => val > 0 || 'Necessário informar um valor maior que 0.',
@@ -52,6 +54,7 @@
                             option-label="nome"
                             emit-value
                             map-options
+                            lazy-rules
                             :rules="[
                                 val => !!val || 'Necessário selecionar uma forma de pagamento.',
                             ]"

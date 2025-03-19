@@ -91,7 +91,7 @@ import type { ComissaoModel } from 'src/models/comissoes/ComissaoModel';
 const servicoStore = useServicoStore();
 const comissaoStore = useComissaoStore();
 
-const servicos = computed(() => servicoStore.getAllServicos);
+const servicos = computed(() => servicoStore.getAllServicosAtivos);
 const comissoes = computed(() => comissaoStore.getComissoesByFuncionarioId(props.funcionario.id));
 
 const crudForm = ref<QForm>()

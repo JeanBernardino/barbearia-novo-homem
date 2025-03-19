@@ -8,6 +8,7 @@
                             v-model="usuario.nome" 
                             type="text" 
                             label="Nome" 
+                            lazy-rules
                             :rules="[
                                 val => !!val || 'Necessário informar um nome.',
                             ]"
@@ -20,6 +21,7 @@
                             v-model="usuario.email" 
                             type="text" 
                             label="E-mail" 
+                            lazy-rules
                             :rules="[
                                 val => !!val || 'Necessário informar um e-mail.',
                                 'email'
@@ -31,6 +33,7 @@
                     <div class="q-mb-md" v-show="usuario.id === ''">
                         <PasswordInput
                             v-model="usuario.senha"
+                            lazy-rules
                             :rules="[
                                 val => !!val || 'Necessário informar uma senha.',
                                 val => val.length >= 8 || 'A senha deve conter no mínimo 8 dígitos.',

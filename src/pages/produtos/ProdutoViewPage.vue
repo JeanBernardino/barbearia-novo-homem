@@ -1,7 +1,7 @@
 <template>
   <q-page class="q-pa-md">
     <q-table
-      :rows="produtos"
+      :rows="filteredProdutos"
       :columns="columns"
       row-key="id"
       :loading="loading"
@@ -14,6 +14,8 @@
         <strong class="q-font-size-lg">Produtos</strong>
 
         <q-space></q-space>
+
+        <q-checkbox v-model="mostrarApenasAtivos" label="Mostrar apenas ativos" class="q-mr-md" />
 
         <q-btn
           label="Novo"
@@ -65,6 +67,11 @@ const router = useRouter();
 const loading = ref(false);
 const produtos = computed(() => store.getAllProdutos);
 const categorias = computed(() => categoriaStore.getAllCategorias);
+
+const mostrarApenasAtivos = ref(true);
+const filteredProdutos = computed(() => {
+  return mostrarApenasAtivos.value ? produtos.value.filter(produto => produto.ativo) : produtos.value;
+});
 
 const columns: {
   name: string;

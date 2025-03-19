@@ -7,7 +7,8 @@
                         <q-input 
                             v-model="servico.nome" 
                             type="text" 
-                            label="Nome" 
+                            label="Nome"
+                            lazy-rules
                             :rules="[
                                 val => !!val || 'Necessário informar um nome.',
                             ]"

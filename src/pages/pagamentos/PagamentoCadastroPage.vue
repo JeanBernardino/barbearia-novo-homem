@@ -8,8 +8,9 @@
                       v-model="pagamento.nome" 
                       type="text" 
                       label="Nome" 
+                      lazy-rules
                       :rules="[
-                          val => !!val || 'Necessário informar um nome.',
+                        val => !!val || 'Necessário informar um nome.',
                       ]"
                       outlined
                     />

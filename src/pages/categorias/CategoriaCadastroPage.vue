@@ -8,6 +8,7 @@
                         v-model="categoria.nome" 
                         type="text" 
                         label="Nome" 
+                        lazy-rules
                         :rules="[
                             val => !!val || 'Necessário informar um nome.',
                         ]"

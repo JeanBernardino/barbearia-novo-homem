@@ -1,7 +1,7 @@
 <template>
   <q-page class="q-pa-md">
     <q-table
-      :rows="pagamentos"
+      :rows="filteredPagamentos"
       :columns="columns"
       row-key="id"
       :loading="loading"
@@ -14,6 +14,8 @@
         <strong class="q-font-size-lg">Pagamentos</strong>
 
         <q-space></q-space>
+
+        <q-checkbox v-model="mostrarApenasAtivos" label="Mostrar apenas ativos" class="q-mr-md" />
 
         <q-btn
           label="Novo"
@@ -56,6 +58,11 @@ const router = useRouter();
 
 const loading = ref(false);
 const pagamentos = computed(() => store.getAllPagamentos);
+
+const mostrarApenasAtivos = ref(true);
+const filteredPagamentos = computed(() => {
+  return mostrarApenasAtivos.value ? pagamentos.value.filter(pagamento => pagamento.ativo) : pagamentos.value;
+});
 
 const columns: {
   name: string;

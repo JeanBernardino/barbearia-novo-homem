@@ -1,7 +1,7 @@
 <template>
   <q-page class="q-pa-md">
     <q-table
-      :rows="usuarios"
+      :rows="filteredUsuarios"
       :columns="columns"
       row-key="id"
       :loading="loading"
@@ -14,6 +14,8 @@
         <strong class="q-font-size-lg">Usuários</strong>
 
         <q-space></q-space>
+
+        <q-checkbox v-model="mostrarApenasAtivos" label="Mostrar apenas ativos" class="q-mr-md" />
 
         <q-btn
           label="Novo"
@@ -52,16 +54,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { useUsuarioStore } from 'src/stores/usuarios/UsuarioStore'
+import { useUsuarioStore } from 'src/stores/usuarios/UsuarioStore';
 import type { UsuarioModel } from 'src/models/usuarios/UsuarioModel';
 
 const store = useUsuarioStore();
 const router = useRouter();
 
 const loading = ref(false);
+
 const usuarios = computed(() => store.getAllUsuarios);
+const mostrarApenasAtivos = ref(true);
+const filteredUsuarios = computed(() => {
+  return mostrarApenasAtivos.value ? usuarios.value.filter(user => user.ativo) : usuarios.value;
+});
 
 const columns: {
   name: string;

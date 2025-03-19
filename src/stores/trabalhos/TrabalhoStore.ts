@@ -54,6 +54,16 @@ export const useTrabalhoStore = defineStore('trabalho', {
       } catch (error) {
         console.error("Erro ao adicionar trabalho:", error);
       }
+    },
+
+    async removeTrabalho(trabalhoId: string) {
+      try {
+        await trabalhoService.remove(trabalhoId);
+    
+        this.trabalhos = this.trabalhos.filter(item => item.id !== trabalhoId);
+      } catch (error) {
+        console.error("Erro ao remover trabalho:", error);
+      }
     }
 
   }

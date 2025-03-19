@@ -23,6 +23,7 @@
                             option-label="nome"
                             emit-value
                             map-options
+                            lazy-rules
                             :rules="[
                                 val => !!val || 'Necessário selecionar um funcionário.',
                             ]"
@@ -39,6 +40,7 @@
                             option-label="nome"
                             emit-value
                             map-options
+                            lazy-rules
                             :rules="[
                                 val => !!val || 'Necessário selecionar um serviço.',
                             ]"
@@ -55,6 +57,7 @@
                             option-label="nome"
                             emit-value
                             map-options
+                            lazy-rules
                             :rules="[
                                 val => !!val || 'Necessário selecionar uma forma de pagamento.',
                             ]"
@@ -136,7 +139,7 @@ const onSave = async () => {
         }
 
         await store.addTrabalho(trabalho.value);
-        trabalho.value = {...trabalhoInicial};
+        trabalho.value = { ...trabalhoInicial };
 
         Notify.create({
             message: 'Trabalho salvo com sucesso!',

@@ -1,7 +1,7 @@
 <template>
   <q-page class="q-pa-md">
     <q-table
-      :rows="categorias"
+      :rows="filteredCategorias"
       :columns="columns"
       row-key="id"
       :loading="loading"
@@ -14,6 +14,8 @@
         <strong class="q-font-size-lg">Categorias</strong>
 
         <q-space></q-space>
+
+        <q-checkbox v-model="mostrarApenasAtivos" label="Mostrar apenas ativos" class="q-mr-md" />
 
         <q-btn
           label="Novo"
@@ -47,16 +49,20 @@
 
   
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { useCategoriaStore } from 'src/stores/categorias/CategoriaStore'
+import { useCategoriaStore } from 'src/stores/categorias/CategoriaStore';
 import type { CategoriaModel } from 'src/models/categorias/CategoriaModel';
 
-const store = useCategoriaStore()
-const router = useRouter()
+const store = useCategoriaStore();
+const router = useRouter();
 
-const loading = ref(false)
-const categorias = computed(() => store.getAllCategorias)
+const loading = ref(false);
+const categorias = computed(() => store.getAllCategorias);
+const mostrarApenasAtivos = ref(true);
+const filteredCategorias = computed(() => {
+  return mostrarApenasAtivos.value ? categorias.value.filter(categoria => categoria.ativo) : categorias.value;
+});
 
 const columns: {
   name: string;
@@ -71,17 +77,17 @@ const columns: {
 ];
 
 onMounted(async () => {
-  loading.value = true
-  await store.loadAllCategorias()
-  loading.value = false
+  loading.value = true;
+  await store.loadAllCategorias();
+  loading.value = false;
 });
 
 const onAdd = async () => {
-  await router.push('categoria')
+  await router.push('categoria');
 };
 
 const onUpdate = async (id: string) => {
-  await router.push(`categoria/${id}`)
+  await router.push(`categoria/${id}`);
 };
 
 const onChangeStatus = async (id: string) => {

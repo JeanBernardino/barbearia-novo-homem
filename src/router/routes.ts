@@ -26,6 +26,8 @@ const routes: RouteRecordRaw[] = [
 
       { path: '/gestao/relatorio', component: () => import('src/pages/gestao/relatorios/GestaoRelatorioViewPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
       { path: '/gestao/grafico', component: () => import('src/pages/gestao/graficos/GestaoGraficoViewPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
+
+      { path: '/trabalhos', component: () => import('src/pages/trabalhos/TrabalhoViewPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
     ],
     meta: { requiresAuth: true }
   },
