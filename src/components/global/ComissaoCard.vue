@@ -34,6 +34,7 @@
                                 :rules="[
                                     val => val !== 0 || 'Informe um valor para a comissão.',
                                 ]"
+                                @update:model-value="comissao.valor = Number($event)"
                             />
                         </div>
                     </div>

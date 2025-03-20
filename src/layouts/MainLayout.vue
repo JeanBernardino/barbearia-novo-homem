@@ -155,6 +155,16 @@
               </q-item-section>
             </q-item>
 
+            <q-item clickable v-ripple to="/vendas" v-show="user?.tipo === UsuarioTipo.ADMIN">
+              <q-item-section avatar>
+                <q-icon name="inventory" />
+              </q-item-section>
+
+              <q-item-section>
+                Vendas
+              </q-item-section>
+            </q-item>
+
             <q-item clickable v-ripple @click="onLogout" class="fixed-bottom">
               <q-item-section avatar>
                 <q-icon name="logout" />

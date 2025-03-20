@@ -18,11 +18,12 @@
 
                     <div class="q-mb-md">
                         <q-input 
-                            v-model="valorServico" 
+                            v-model="servico.valor" 
                             type="text" 
                             label="Preço" 
                             prefix="R$"
                             outlined
+                            @update:model-value="servico.valor = Number($event)"
                         />
                     </div>
 
@@ -54,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
 import { useServicoStore } from 'src/stores/servicos/ServicoStore'
 import type { ServicoModel } from 'src/models/servicos/ServicoModel';
@@ -75,14 +76,6 @@ const servico = ref<ServicoModel>({
     nome: '',
     valor: 0,
     flagCombo: false
-});
-
-const valorServico = computed({
-    get: () => servico.value.valor,
-    set: (value: string) => {
-        const numericValue = parseFloat(value.trim());
-        servico.value.valor = isNaN(numericValue) ? 0 : numericValue;
-    }
 });
 
 onMounted(async () => {

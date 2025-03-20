@@ -33,7 +33,7 @@
                     <div class="q-mb-md">
                         <q-input 
                             v-model="venda.quantidade" 
-                            type="text" 
+                            type="number" 
                             label="Quantidade"
                             outlined
                             lazy-rules
@@ -41,6 +41,7 @@
                                 val => !!val || 'Necessário informar um valor.',
                                 val => val > 0 || 'Necessário informar um valor maior que 0.',
                             ]"
+                            @update:model-value="venda.quantidade = Number($event)"
                         />
                     </div>
 
@@ -72,11 +73,11 @@
 import { ref, onMounted, computed } from 'vue';
 import { QForm, Notify } from 'quasar';
 import { usePagamentoStore } from 'src/stores/pagamentos/PagamentoStore';
-import { useVendatore } from 'src/stores/vendas/VendaStore';
+import { useVendaStore } from 'src/stores/vendas/VendaStore';
 import { useProdutoStore } from 'src/stores/produtos/ProdutoStore';
 import type { VendaModel } from 'src/models/vendas/VendaModel';
 
-const store = useVendatore();
+const store = useVendaStore();
 const produtoStore = useProdutoStore();
 const pagamentoStore = usePagamentoStore();
 const crudForm = ref<QForm>();

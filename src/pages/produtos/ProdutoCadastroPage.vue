@@ -19,10 +19,11 @@
                   <div class="q-mb-md">
                     <q-input 
                       v-model="produto.valor" 
-                      type="text" 
+                      type="number" 
                       label="Preço" 
                       prefix="R$"
                       outlined
+                      @update:model-value="produto.valor = Number($event)"
                     />
                   </div>
 
@@ -101,13 +102,13 @@ onMounted(async () => {
     if (id) {
         const model = await store.getProdutoById(id);
         if (model) {
-            produto.value = { ...model };
+          produto.value = { ...model };
         } else {
-            Notify.create({
-                message: 'Produto não encontrado.',
-                type: 'negative'
-            });
-            await router.push('/produtos');
+          Notify.create({
+            message: 'Produto não encontrado.',
+            type: 'negative'
+          });
+          await router.push('/produtos');
         }
     }
 });
@@ -115,13 +116,13 @@ onMounted(async () => {
 const onSave = async () => {
   const isValid = await crudForm.value?.validate(true);
   if (crudForm.value && !isValid) {
-      return;
+    return;
   }
 
   if (produto.value.id) {
-      await store.updateProduto(produto.value);
+    await store.updateProduto(produto.value);
   } else {
-      await store.addProduto(produto.value);
+    await store.addProduto(produto.value);
   }
   await router.push('/produtos');
 };

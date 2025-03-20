@@ -6,7 +6,7 @@ interface VendaStoreState {
   vendas: VendaModel[];
 }
 
-export const useVendatore = defineStore('venda', {
+export const useVendaStore = defineStore('venda', {
   state: (): VendaStoreState => ({
     vendas: [],
   }),
@@ -45,11 +45,30 @@ export const useVendatore = defineStore('venda', {
       } catch (error) {
         console.error("Erro ao adicionar venda:", error);
       }
+    },
+
+    async getVendasByRangeDate(dataInicio: string, dataFim: string): Promise<VendaModel[]> {
+      try {
+        return vendaService.getVendasByRangeDate(dataInicio, dataFim)
+      } catch (error) {
+        console.error("Erro ao buscar vendas:", error);
+        return [];
+      }
+    },
+
+    async removeVenda(vendaId: string) {
+      try {
+        await vendaService.remove(vendaId);
+    
+        this.vendas = this.vendas.filter(item => item.id !== vendaId);
+      } catch (error) {
+        console.error("Erro ao remover venda:", error);
+      }
     }
 
   }
 });
 
 if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useVendatore, import.meta.hot));
+  import.meta.hot.accept(acceptHMRUpdate(useVendaStore, import.meta.hot));
 }

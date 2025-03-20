@@ -5,7 +5,7 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/IndexPage.vue') },
+      { path: '', component: () => import('pages/IndexPage.vue') , meta: { requiresAuth: true, requiresAdmin: true } },
       { path: '/usuarios', component: () => import('src/pages/usuarios/UsuarioViewPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
       { path: '/usuario/:id?', component: () => import('src/pages/usuarios/UsuarioCadastroPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
       
@@ -30,6 +30,8 @@ const routes: RouteRecordRaw[] = [
       { path: '/gestao/grafico-pagamentos', component: () => import('src/pages/gestao/graficos/GestaoPagamentosViewPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
 
       { path: '/trabalhos', component: () => import('src/pages/trabalhos/TrabalhoViewPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
+
+      { path: '/vendas', component: () => import('src/pages/vendas/VendaViewPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
     ],
     meta: { requiresAuth: true }
   },

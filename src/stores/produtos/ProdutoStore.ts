@@ -14,7 +14,15 @@ export const useProdutoStore = defineStore('produto', {
 
   getters: {
     getAllProdutos: (state) => state.produtos,
+
     getAllProdutosAtivos: (state) => state.produtos.filter(p => p.ativo),
+
+    findProdutoById: (state) => {
+      return (produtoId: string): ProdutoModel | null => {
+        const produto = state.produtos.find(produto => produto.id === produtoId);
+        return produto || null;
+      };
+    },
   },
 
   actions: {
