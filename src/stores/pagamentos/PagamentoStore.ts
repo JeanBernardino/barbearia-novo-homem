@@ -14,7 +14,15 @@ export const usePagamentoStore = defineStore('pagamento', {
 
   getters: {
     getAllPagamentos: (state) => state.pagamentos,
+    
     getAllPagamentosAtivos: (state) => state.pagamentos.filter(p => p.ativo),
+
+    findPagamentoById: (state) => {
+      return (pagamentoId: string): PagamentoModel | null => {
+        const pagamento = state.pagamentos.find(pagamento => pagamento.id === pagamentoId);
+        return pagamento || null;
+      };
+    },
   },
 
   actions: {

@@ -14,7 +14,15 @@ export const useServicoStore = defineStore('servico', {
 
   getters: {
     getAllServicos: (state) => state.servicos,
+    
     getAllServicosAtivos: (state) => state.servicos.filter(p => p.ativo),
+
+    findServicoById: (state) => {
+      return (servicoId: string): ServicoModel | null => {
+        const servico = state.servicos.find(servico => servico.id === servicoId);
+        return servico || null;
+      };
+    },
   },
 
   actions: {

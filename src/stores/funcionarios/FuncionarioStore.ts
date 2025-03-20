@@ -14,7 +14,15 @@ export const useFuncionarioStore = defineStore('funcionario', {
 
   getters: {
     getAllFuncionarios: (state) => state.funcionarios,
+
     getAllFuncionariosAtivos: (state) => state.funcionarios.filter(f => f.ativo),
+
+    findFuncionarioById: (state) => {
+      return (funcionarioId: string): FuncionarioModel | null => {
+        const funcionario = state.funcionarios.find(funcionario => funcionario.id === funcionarioId);
+        return funcionario || null;
+      };
+    },
   },
 
   actions: {

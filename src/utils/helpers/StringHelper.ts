@@ -16,8 +16,8 @@
  * @throws {Error} - Se o valor fornecido não for do tipo string, null ou undefined.
  */
 export function isNotEmpty(value: string | null | undefined): boolean {
-    if (typeof value !== 'string' && value !== null && value !== undefined) {
-      throw new Error("O valor deve ser uma string, null ou undefined.");
-    }
-    return value !== null && value !== undefined && value.trim() !== '';
+  if (typeof value !== 'string' && value !== null && value !== undefined) {
+    throw new Error("O valor deve ser uma string, null ou undefined.");
+  }
+  return value !== null && value !== undefined && value.trim() !== '';
 }

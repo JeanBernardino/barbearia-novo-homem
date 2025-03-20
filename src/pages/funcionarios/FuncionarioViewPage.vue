@@ -11,7 +11,7 @@
       style="height: 90vh;"
     >
       <template v-slot:top>
-        <strong class="q-font-size-lg">Funcionários</strong>
+        <strong class="q-font-size-lg">Barbeiros</strong>
 
         <q-space></q-space>
 
@@ -82,11 +82,11 @@ onMounted(async () => {
 });
 
 const onAdd = async () => {
-  await router.push('funcionario');
+  await router.push('barbeiro');
 };
 
 const onUpdate = async (id: string) => {
-  await router.push(`funcionario/${id}`);
+  await router.push(`barbeiro/${id}`);
 };
 
 const onChangeStatus = async (id: string) => {

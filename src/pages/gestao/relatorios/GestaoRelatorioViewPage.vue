@@ -9,14 +9,13 @@
                 outlined 
                 v-model="filters.funcionario_id" 
                 :options="funcionarios" 
-                label="Funcionario"
+                label="Barbeiro"
                 option-value="id"
                 option-label="nome"
                 emit-value
                 map-options
-                :rules="[
-                  val => !!val || 'Necessário selecionar um funcionário.',
-                ]"
+                placeholder="Todos"
+                clearable
               />
             </div>
 
@@ -71,7 +70,7 @@
 
           <q-tr>
             <q-td colspan="100%" align="left">
-              Total funcionário: R$ {{ totalComissaoTotal.toFixed(2).replace('.', ',') }}
+              Total barbeiro: R$ {{ totalComissaoTotal.toFixed(2).replace('.', ',') }}
             </q-td>
           </q-tr>
         </template>
@@ -154,7 +153,11 @@ const onFilterConfirm = async () => {
 
     for (const trabalho of trabalhosRealizados) {
       if (!servicosMap.has(trabalho.servico_id)) {
-        const servico = await servicoStore.getServicoById(trabalho.servico_id);
+        let servico = servicoStore.findServicoById(trabalho.servico_id);
+        if (servico === null) {
+          servico = await servicoStore.getServicoById(trabalho.servico_id);
+        }
+
         if (servico) {
           servicosMap.set(trabalho.servico_id, servico.nome);
         }

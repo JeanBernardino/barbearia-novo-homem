@@ -30,13 +30,24 @@ class TrabalhoService extends AbstractService<TrabalhoModel> {
         const startTimestamp = Timestamp.fromMillis(startOfDay.toMillis());
         const endTimestamp = Timestamp.fromMillis(endOfDay.toMillis());
 
-        const q = query(
+        // Criação da base da query
+        let q = query(
             collectionRef,
-            where('funcionario_id', '==', funcionarioId),
             where('cadastroData', '>=', startTimestamp),
             where('cadastroData', '<=', endTimestamp),
             orderBy('cadastroData', 'asc')
         );
+
+        // Se o funcionarioId não for nulo ou vazio, adiciona a condição de filtro por funcionario_id
+        if (funcionarioId) {
+            q = query(
+                collectionRef,
+                where('funcionario_id', '==', funcionarioId),
+                where('cadastroData', '>=', startTimestamp),
+                where('cadastroData', '<=', endTimestamp),
+                orderBy('cadastroData', 'asc')
+            );
+        }
 
         const snapshot = await getDocs(q);
 

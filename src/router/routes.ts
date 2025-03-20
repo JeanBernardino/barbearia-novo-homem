@@ -9,8 +9,8 @@ const routes: RouteRecordRaw[] = [
       { path: '/usuarios', component: () => import('src/pages/usuarios/UsuarioViewPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
       { path: '/usuario/:id?', component: () => import('src/pages/usuarios/UsuarioCadastroPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
       
-      { path: '/funcionarios', component: () => import('src/pages/funcionarios/FuncionarioViewPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
-      { path: '/funcionario/:id?', component: () => import('src/pages/funcionarios/FuncionarioCadastroPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
+      { path: '/barbeiros', component: () => import('src/pages/funcionarios/FuncionarioViewPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
+      { path: '/barbeiro/:id?', component: () => import('src/pages/funcionarios/FuncionarioCadastroPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
 
       { path: '/servicos', component: () => import('pages/servicos/ServicoViewPage.vue'), meta: { requiresAuth: true, requiresAdmin: true }},
       { path: '/servico/:id?', component: () => import('pages/servicos/ServicoCadastroPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
@@ -24,8 +24,10 @@ const routes: RouteRecordRaw[] = [
       { path: '/categorias', component: () => import('pages/categorias/CategoriaViewPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
       { path: '/categoria/:id?', component: () => import('pages/categorias/CategoriaCadastroPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
 
-      { path: '/gestao/relatorio', component: () => import('src/pages/gestao/relatorios/GestaoRelatorioViewPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
-      { path: '/gestao/grafico', component: () => import('src/pages/gestao/graficos/GestaoGraficoViewPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
+      { path: '/gestao/grafico-geral', component: () => import('src/pages/gestao/graficos/GestaoGeralViewPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
+      { path: '/gestao/relatorio-barbeiros', component: () => import('src/pages/gestao/relatorios/GestaoRelatorioViewPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
+      { path: '/gestao/grafico-barbeiros', component: () => import('src/pages/gestao/graficos/GestaoGraficoViewPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
+      { path: '/gestao/grafico-pagamentos', component: () => import('src/pages/gestao/graficos/GestaoPagamentosViewPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
 
       { path: '/trabalhos', component: () => import('src/pages/trabalhos/TrabalhoViewPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
     ],

@@ -1,7 +1,7 @@
 <template>
     <q-page class="q-pa-md">
         <q-table
-            :rows="trabalhos"
+            :rows="filteredTrabalhos"
             :columns="columns"
             row-key="id"
             :loading="loading"
@@ -12,10 +12,21 @@
         >
             <template v-slot:top>
                 <strong class="q-font-size-lg">Trabalhos</strong>
+
+                <q-space></q-space>
+
+                <q-input borderless dense debounce="300" v-model="filterText" placeholder="Buscar">
+                    <template v-slot:append>
+                        <q-icon name="search" />
+                    </template>
+                </q-input>
             </template>
 
             <template v-slot:body="props">
                 <q-tr :props="props">
+                    <q-td :props="props" key="data">
+                        {{ formatFirebaseTimestampToBRDate(props.row.cadastroData) }}
+                    </q-td>
                     <q-td :props="props" key="funcionario">
                         {{ getFuncionarioNome(props.row.funcionario_id) }}
                     </q-td>
@@ -52,6 +63,7 @@ import type { TrabalhoModel } from 'src/models/trabalhos/TrabalhoModel';
 import { useTrabalhoStore } from 'src/stores/trabalhos/TrabalhoStore';
 import { useServicoStore } from 'src/stores/servicos/ServicoStore';
 import { useFuncionarioStore } from 'src/stores/funcionarios/FuncionarioStore';
+import type { Timestamp } from "firebase/firestore";
 
 const store = useTrabalhoStore();
 const servicoStore = useServicoStore();
@@ -60,6 +72,7 @@ const funcionarioStore = useFuncionarioStore();
 const loading = ref(false);
 const trabalhoToRemove = ref('');
 const isConfirmDialogOpen = ref(false);
+const filterText = ref('');
 
 const trabalhos = computed(() => store.getAllTrabalhos);
 const servicos = computed(() => servicoStore.getAllServicos);
@@ -69,9 +82,10 @@ const columns: {
     name: string;
     label: string;
     align: 'left' | 'right' | 'center';
-    field: (row: TrabalhoModel) => string | number | boolean; // Tipo corrigido
+    field: (row: TrabalhoModel) => Timestamp | string | number | boolean | null; // Tipo corrigido
     sortable: boolean;
 }[] = [
+    { name: 'data', label: 'Data', align: 'left', field: (row) => row.cadastroData, sortable: true },
     { name: 'funcionario', label: 'Funcionário', align: 'left', field: (row) => row.funcionario_id, sortable: true },
     { name: 'comissao', label: 'Comissão', align: 'left', field: (row) => row.funcionario_comissao, sortable: true },
     { name: 'servico', label: 'Serviço', align: 'left', field: (row) => row.servico_id, sortable: true },
@@ -115,5 +129,29 @@ const getFuncionarioNome = (id: string): string => {
     const funcionario = funcionarios.value.find(f => f.id === id);
     return funcionario ? funcionario.nome : '';
 };
+
+function formatFirebaseTimestampToBRDate(timestamp: Timestamp | null): string {
+    if (!timestamp) {
+        return '';
+    }
+
+    const date = timestamp.toDate();
+    return new Intl.DateTimeFormat('pt-BR').format(date);
+}
+
+const filteredTrabalhos = computed(() => {
+    return trabalhos.value.filter((trabalho) => {
+        const searchTerm = filterText.value.toLowerCase();
+
+        return (
+            formatFirebaseTimestampToBRDate(trabalho.cadastroData).toLowerCase().includes(searchTerm) ||
+            getFuncionarioNome(trabalho.funcionario_id).toLowerCase().includes(searchTerm) ||
+            String(trabalho.funcionario_comissao).includes(searchTerm) ||
+            getServicoNome(trabalho.servico_id).toLowerCase().includes(searchTerm) ||
+            String(trabalho.servico_valor).includes(searchTerm)
+        );
+    });
+});
+
 
 </script>

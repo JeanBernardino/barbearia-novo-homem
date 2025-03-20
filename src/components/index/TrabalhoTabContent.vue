@@ -18,14 +18,14 @@
                             outlined 
                             v-model="trabalho.funcionario_id" 
                             :options="funcionarios" 
-                            label="Funcionario"
+                            label="Barbeiro"
                             option-value="id"
                             option-label="nome"
                             emit-value
                             map-options
                             lazy-rules
                             :rules="[
-                                val => !!val || 'Necessário selecionar um funcionário.',
+                                val => !!val || 'Necessário selecionar um barbeiro.',
                             ]"
                         />
                     </div>

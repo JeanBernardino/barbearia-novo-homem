@@ -37,13 +37,13 @@
               </q-item-section>
             </q-item>
 
-            <q-item clickable v-ripple to="/funcionarios" v-show="user?.tipo === UsuarioTipo.ADMIN">
+            <q-item clickable v-ripple to="/barbeiros" v-show="user?.tipo === UsuarioTipo.ADMIN">
               <q-item-section avatar>
                 <q-icon name="badge" />
               </q-item-section>
 
               <q-item-section>
-                Funcionários
+                Barbeiros
               </q-item-section>
             </q-item>
 
@@ -103,23 +103,43 @@
               v-show="user?.tipo === UsuarioTipo.ADMIN"
             >
               <q-list>
-                <q-item clickable v-ripple to="/gestao/relatorio">
+                <q-item clickable v-ripple to="/gestao/grafico-geral">
                   <q-item-section avatar>
                     <q-icon name="analytics" />
                   </q-item-section>
 
                   <q-item-section>
-                    Relatório
+                    Gráfico Geral
                   </q-item-section>
                 </q-item>
 
-                <q-item clickable v-ripple to="/gestao/grafico">
+                <q-item clickable v-ripple to="/gestao/relatorio-barbeiros">
                   <q-item-section avatar>
                     <q-icon name="analytics" />
                   </q-item-section>
 
                   <q-item-section>
-                    Gráfico
+                    Relatório Barbeiros
+                  </q-item-section>
+                </q-item>
+
+                <q-item clickable v-ripple to="/gestao/grafico-barbeiros">
+                  <q-item-section avatar>
+                    <q-icon name="analytics" />
+                  </q-item-section>
+
+                  <q-item-section>
+                    Gráfico Barbeiros
+                  </q-item-section>
+                </q-item>
+
+                <q-item clickable v-ripple to="/gestao/grafico-pagamentos">
+                  <q-item-section avatar>
+                    <q-icon name="analytics" />
+                  </q-item-section>
+
+                  <q-item-section>
+                    Gráfico Pagamentos
                   </q-item-section>
                 </q-item>
               </q-list>

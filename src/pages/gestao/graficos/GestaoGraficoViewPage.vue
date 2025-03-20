@@ -9,12 +9,13 @@
                                 outlined 
                                 v-model="filters.funcionario_id" 
                                 :options="funcionarios" 
-                                label="Funcionario"
+                                label="Barbeiro"
                                 option-value="id"
                                 option-label="nome"
                                 emit-value
                                 map-options
-                                :rules="[val => !!val || 'Necessário selecionar um funcionário.']"
+                                placeholder="Todos"
+                                clearable
                             />
                         </div>
 
@@ -32,7 +33,6 @@
             </q-form>
         </div>
 
-        <!-- Exibe os gráficos assim que o filtro é aplicado -->
         <div v-if="showCharts">
             <div class="row q-col-gutter-md">
                 <div class="col-12">
@@ -111,25 +111,29 @@ const onFilterConfirm = async () => {
         // Iterar pelos trabalhos realizados
         for (const trabalho of trabalhosRealizados) {
             // Obter o serviço correspondente ao ID
-            const servico = await servicoStore.getServicoById(trabalho.servico_id);
-            const serviceName = servico ? servico.nome : 'Serviço Desconhecido'; // Nome do serviço ou "Desconhecido" caso não encontre
+            let servico = servicoStore.findServicoById(trabalho.servico_id);
+            if (servico === null) {
+                servico = await servicoStore.getServicoById(trabalho.servico_id);
+            }
+
+            const serviceName = servico ? servico.nome : ''; // Nome do serviço ou "Desconhecido" caso não encontre
             
             // Atualizando a contagem de serviços
             serviceCountMap.set(serviceName, (serviceCountMap.get(serviceName) || 0) + 1);
 
             // Verificar se o valor do serviço já foi somado anteriormente
             if (!valorTotalMap.has(serviceName)) {
-            valorTotalMap.set(serviceName, trabalho.servico_valor);
+                valorTotalMap.set(serviceName, trabalho.servico_valor);
             } else {
-            valorTotalMap.set(serviceName, valorTotalMap.get(serviceName)! + trabalho.servico_valor);
+                valorTotalMap.set(serviceName, valorTotalMap.get(serviceName)! + trabalho.servico_valor);
             }
             
             // Verificando se o valor da comissão foi calculado corretamente
             const comissao = trabalho.servico_valor * (trabalho.funcionario_comissao / 100);
             if (!comissaoTotalMap.has(serviceName)) {
-            comissaoTotalMap.set(serviceName, comissao);
+                comissaoTotalMap.set(serviceName, comissao);
             } else {
-            comissaoTotalMap.set(serviceName, comissaoTotalMap.get(serviceName)! + comissao);
+                comissaoTotalMap.set(serviceName, comissaoTotalMap.get(serviceName)! + comissao);
             }
 
             totalValorTotal += trabalho.servico_valor;
@@ -175,7 +179,7 @@ const onFilterConfirm = async () => {
                 valuesChart = new Chart(valuesChartCanvas.value, {
                     type: 'bar',
                     data: {
-                    labels: ['Serviços', 'Funcionário'],
+                    labels: ['Serviços', 'Barbeiro'],
                     datasets: [
                         {
                             label: 'Valores',
