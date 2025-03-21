@@ -149,7 +149,20 @@ function formatFirebaseTimestampToBRDate(timestamp: Timestamp | null): string {
     }
 
     const date = timestamp.toDate();
-    return new Intl.DateTimeFormat('pt-BR').format(date);
+    const dateFormat = new Intl.DateTimeFormat('pt-BR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+    }).format(date);
+
+    const timeFormat = new Intl.DateTimeFormat('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+    }).format(date);
+
+    return `${dateFormat} ${timeFormat}`;
 }
 
 const filteredVendas = computed(() => {
