@@ -47,9 +47,9 @@ export const useTrabalhoStore = defineStore('trabalho', {
       }
     },
 
-    async addTrabalho(trabalho: TrabalhoModel) {
+    async addTrabalho(trabalho: TrabalhoModel, cadastroData: Date) {
       try {
-        const newTrabalho = await trabalhoService.save(trabalho);
+        const newTrabalho = await trabalhoService.save(trabalho, cadastroData);
         this.trabalhos.push(newTrabalho);
       } catch (error) {
         console.error("Erro ao adicionar trabalho:", error);

@@ -45,17 +45,20 @@ export class AbstractService<T> {
     /**
     * Adiciona um novo documento na coleção.
     */
-    async save(data: T): Promise<T & { id: string }> {
+    async save(data: T, cadastroData?: Date): Promise<T & { id: string }> {
         try {
+            cadastroData = cadastroData || new Date();
+
             const collectionRef = collection(db, this.collectionName);
     
             // Criar uma cópia do objeto para evitar mutação
             const dataCopy = { ...data };
             delete (dataCopy as { id?: string }).id; // Remover o campo 'id' se existir
+
     
             const docRef = await addDoc(collectionRef, {
                 ...dataCopy, // Agora garantimos que 'id' não será salvo no Firestore
-                cadastroData: new Date(),
+                cadastroData: cadastroData,
                 cadastroUsuario: auth.currentUser ? auth.currentUser.uid : null
             });
     

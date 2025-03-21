@@ -5,7 +5,7 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/IndexPage.vue') , meta: { requiresAuth: true, requiresAdmin: true } },
+      { path: '', component: () => import('pages/IndexPage.vue') },
       { path: '/usuarios', component: () => import('src/pages/usuarios/UsuarioViewPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
       { path: '/usuario/:id?', component: () => import('src/pages/usuarios/UsuarioCadastroPage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
       

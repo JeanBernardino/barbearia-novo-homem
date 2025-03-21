@@ -47,6 +47,10 @@
                         />
                     </div>
 
+                    <div class="q-mb-md" v-show="user?.tipo === UsuarioTipo.ADMIN">
+                        <q-input v-model="trabalhoData" outlined type="date" :rules="[val => !!val || 'Necessário informar uma data de cadastro.']" />
+                    </div>
+
                     <div class="q-mb-md">
                         <q-select 
                             outlined 
@@ -80,14 +84,20 @@ import { usePagamentoStore } from 'src/stores/pagamentos/PagamentoStore';
 import { useTrabalhoStore } from 'src/stores/trabalhos/TrabalhoStore';
 import type { TrabalhoModel } from 'src/models/trabalhos/TrabalhoModel';
 import { useComissaoStore } from 'src/stores/comissoes/ComissaoStore';
+import { Timestamp } from "firebase/firestore";
+import { DateTime } from 'luxon';
+import { useAuthStore } from 'src/stores/usuarios/AuthStore';
+import { UsuarioTipo } from 'src/models/usuarios/UsuarioTipo';
 
 const store = useTrabalhoStore();
 const funcionarioStore = useFuncionarioStore();
 const servicoStore = useServicoStore();
 const pagamentoStore = usePagamentoStore();
 const comissaoStore = useComissaoStore();
+const authStore = useAuthStore();
 
 const crudForm = ref<QForm>();
+const user = authStore.user;
 
 const funcionarios = computed(() => funcionarioStore.getAllFuncionariosAtivos);
 const servicos = computed(() => servicoStore.getAllServicosAtivos);
@@ -99,7 +109,7 @@ const trabalhoInicial= {
     id: '',
     alteracaoData: null,
     alteracaoUsuario: '',
-    cadastroData: null,
+    cadastroData: Timestamp.fromDate(new Date()),
     cadastroUsuario: '',
     ativo: true,
     funcionario_id: '',
@@ -109,14 +119,51 @@ const trabalhoInicial= {
     servico_valor: 0,
 };
 const trabalho = ref<TrabalhoModel>({...trabalhoInicial});
+const trabalhoData = ref();
 
 onMounted(async () => {
     await funcionarioStore.loadAllFuncionarios();
     await servicoStore.loadAllServicos();
     await pagamentoStore.loadAllPagamentos();
     await comissaoStore.loadAllComissoes();
+
+    trabalhoData.value = getTodayDate();
     loading.value = false;
 });
+
+const getTodayDate = () => {
+  const today = new Date();
+
+  const saoPauloOffset = -3 * 60;
+  const localOffset = today.getTimezoneOffset();
+  const adjustedTime = today.getTime() + (saoPauloOffset - localOffset) * 60000;
+
+  const saoPauloDate = new Date(adjustedTime);
+  return saoPauloDate.toISOString().slice(0, 10);
+}
+
+function convertToStartOfDay(dateString: string): Date {
+    if (!dateString) {
+        console.error('Data inválida ou indefinida');
+        return new Date();
+    }
+
+    const startOfDay = DateTime.fromISO(dateString, { zone: 'America/Sao_Paulo' }).startOf('day');
+    if (!startOfDay.isValid) {
+        console.error('Data inválida');
+        return new Date();
+    }
+
+    const currentTime = DateTime.now().setZone('America/Sao_Paulo');
+    const updatedDate = startOfDay.set({
+        hour: currentTime.hour,
+        minute: currentTime.minute,
+        second: currentTime.second,
+        millisecond: currentTime.millisecond,
+    });
+
+    return updatedDate.toJSDate();
+}
 
 const onSave = async () => {
     try {
@@ -138,8 +185,12 @@ const onSave = async () => {
             trabalho.value.funcionario_comissao = comissaoFuncionario.valor;
         }
 
-        await store.addTrabalho(trabalho.value);
+        const cadastroData = convertToStartOfDay(trabalhoData.value);
+
+        await store.addTrabalho(trabalho.value, cadastroData);
         trabalho.value = { ...trabalhoInicial };
+        
+        trabalhoData.value = getTodayDate();
 
         Notify.create({
             message: 'Trabalho salvo com sucesso!',
@@ -153,4 +204,5 @@ const onSave = async () => {
         });
     }
 };
+
 </script>
