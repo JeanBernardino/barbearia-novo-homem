@@ -188,13 +188,13 @@
 import { useAuthStore } from 'src/stores/usuarios/AuthStore';
 import { ref } from 'vue';
 import { Notify } from 'quasar';
-import { useRouter } from 'vue-router';
+//import { useRouter } from 'vue-router';
 import { UsuarioTipo } from 'src/models/usuarios/UsuarioTipo';
 
 const leftDrawerOpen = ref(false);
 const authStore = useAuthStore();
 
-const router = useRouter()
+//const router = useRouter()
 const user = authStore.user;
 
 function toggleLeftDrawer () {
@@ -208,7 +208,7 @@ async function onLogout() {
       message: 'Logout realizado com sucesso.',
       type: 'positive',
     });
-    await router.push('/login')
+    //await router.push('/login')
   } catch {
     Notify.create({
       message: 'Erro ao realizar logout.',

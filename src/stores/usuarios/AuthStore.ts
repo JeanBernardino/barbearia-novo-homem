@@ -2,6 +2,8 @@ import { defineStore, acceptHMRUpdate } from 'pinia';
 import { auth, db } from 'src/boot/firebase';
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
+import type { User } from 'firebase/auth';
+import { Notify } from 'quasar';
 
 interface UsuarioModel {
   email: string;
@@ -20,7 +22,7 @@ interface AuthStoreState {
 export const useAuthStore = defineStore('auth', {
   state: (): AuthStoreState => ({
     user: null,
-    sessionTimeout: 60 * 60 * 1000,
+    sessionTimeout: 20 * 60 * 60 * 1000,
     lastActivity: localStorage.getItem('lastActivity') ? parseInt(localStorage.getItem('lastActivity')!) : Date.now(),
   }),
 
@@ -38,37 +40,40 @@ export const useAuthStore = defineStore('auth', {
         this.user = JSON.parse(savedUser);
       }
     
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      onAuthStateChanged(auth, async (user) => {
-        if (user && user.email !== null) {
-          try {
-            // Aguardar o usuário do Firestore
-            const usuario = await this.getUserFromFirestore(user.email);
-            
-            if (usuario) {
-              this.user = usuario;
-              this.updateLastActivity();
-              // Envolvendo localStorage.setItem em try-catch para capturar exceções
-              try {
-                localStorage.setItem('user', JSON.stringify(usuario));
-              } catch (error) {
-                console.error('Erro ao salvar no localStorage:', error);
-                // Trate ou lide com o erro se o armazenamento falhar (por exemplo, se o limite de quota for atingido)
-              }
-            } else {
-              await this.logout(); // Se o usuário não for encontrado ou não estiver ativo
-            }
-          } catch (error) {
-            console.error("Erro ao buscar usuário no Firestore:", error);
-            await this.logout(); // Caso ocorra erro na obtenção dos dados do Firestore
-          }
-        } else {
-          this.user = null;
-          localStorage.removeItem('user');
-        }
+      onAuthStateChanged(auth, (user) => {
+        this.handleAuthStateChange(user).catch(error => {
+          console.error("Erro ao processar mudança de autenticação:", error);
+        });
       });
     
       this.checkSessionExpiration();
+    },
+
+    async handleAuthStateChange(user: User | null) {
+      if (user && user.email !== null) {
+        try {
+          // Aguardar o usuário do Firestore
+          const usuario = await this.getUserFromFirestore(user.email);
+    
+          if (usuario) {
+            this.user = usuario;
+            this.updateLastActivity();
+            try {
+              localStorage.setItem('user', JSON.stringify(usuario));
+            } catch (error) {
+              console.error('Erro ao salvar no localStorage:', error);
+            }
+          } else {
+            await this.logout();
+          }
+        } catch (error) {
+          console.error("Erro ao buscar usuário no Firestore:", error);
+          await this.logout();
+        }
+      } else {
+        this.user = null;
+        localStorage.removeItem('user');
+      }
     },
 
     async getUserFromFirestore(email: string): Promise<UsuarioModel | null> {
@@ -89,16 +94,22 @@ export const useAuthStore = defineStore('auth', {
     },
 
     checkSessionExpiration() {
-      setInterval(() => {
-        const currentTime = Date.now();
-        const elapsedTime = currentTime - this.lastActivity;
-
-        if (elapsedTime >= this.sessionTimeout) {
-          this.logout().catch(error => {
-            console.log(error);
-          });
-        }
-      }, 300000);
+      if (this.isLogged()) {
+        setInterval(() => {
+          const currentTime = Date.now();
+          const elapsedTime = currentTime - this.lastActivity;
+  
+          if (elapsedTime >= this.sessionTimeout) {
+            console.log('efetuando logout');
+            this.logout().catch(error => {
+              Notify.create({
+                message: error,
+                type: 'Negative'
+              });
+            });
+          }
+        }, 10000);
+      }
     },
 
     updateLastActivity() {
@@ -116,6 +127,7 @@ export const useAuthStore = defineStore('auth', {
           this.user = usuario;
           this.updateLastActivity();
           localStorage.setItem('user', JSON.stringify(usuario));
+          this.init();
         } else {
           throw new Error("Usuário ou senha inválidos!");
         }
@@ -127,6 +139,7 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('user');
       this.user = null;
       localStorage.removeItem('lastActivity');
+      await this.router.push('/login');
     },
   }
 });
