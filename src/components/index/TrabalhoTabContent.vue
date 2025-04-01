@@ -67,8 +67,8 @@
                             ]"
                         />
                     </div>
-
-                    <q-btn color="primary" icon="check" label="Salvar" @click="onSave" />
+                    
+                    <q-btn color="primary" icon="check" label="Salvar" @click="onSave" :disable="saving"/>
                 </div>
             </div>
         </q-form>
@@ -104,6 +104,7 @@ const servicos = computed(() => servicoStore.getAllServicosAtivos);
 const pagamentos = computed(() => pagamentoStore.getAllPagamentosAtivos);
 const comissoes = computed(() => comissaoStore.getAllComissoes);
 const loading = ref(true);
+const saving = ref(true);
 
 const trabalhoInicial= {
     id: '',
@@ -129,6 +130,7 @@ onMounted(async () => {
 
     trabalhoData.value = getTodayDate();
     loading.value = false;
+    saving.value = false;
 });
 
 const getTodayDate = () => {
@@ -167,6 +169,8 @@ function convertToStartOfDay(dateString: string): Date {
 
 const onSave = async () => {
     try {
+        saving.value = true;
+
         const isValid = await crudForm.value?.validate(true);
         if (crudForm.value && !isValid) {
             return;
@@ -196,12 +200,14 @@ const onSave = async () => {
             message: 'Trabalho salvo com sucesso!',
             type: 'positive'
         });
+        saving.value = false;
     } catch (error) {
         console.log(error);
         Notify.create({
             message: 'Não foi possível salvar o trabalho!',
             type: 'negative'
         });
+        saving.value = false;
     }
 };
 

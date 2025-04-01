@@ -61,7 +61,7 @@ export class AbstractService<T> {
                 cadastroData: cadastroData,
                 cadastroUsuario: auth.currentUser ? auth.currentUser.uid : null
             });
-    
+            
             // Retornando um novo objeto com o ID gerado pelo Firestore
             return { ...dataCopy, id: docRef.id } as T & { id: string };
         } catch (error) {
