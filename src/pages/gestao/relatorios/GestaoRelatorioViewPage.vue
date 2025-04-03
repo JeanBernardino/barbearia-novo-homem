@@ -296,8 +296,6 @@ const onFilterConfirm = async () => {
       }
 
       const row = groupedData.get(data)!;
-      console.log(venda);
-      console.log(venda.quantidade);
       row.totalProdutos += venda.quantidade;
       row.produtos[venda.produto_id] = (row.produtos[venda.produto_id] || 0) + venda.quantidade;
 
