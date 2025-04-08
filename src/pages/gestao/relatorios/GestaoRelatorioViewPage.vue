@@ -71,30 +71,46 @@
         </template>
 
         <template v-slot:bottom-row>
-          <q-tr v-show="filters.funcionario_id === null || filters.funcionario_id === ''">
+          <q-tr class="bg-grey-3 text-weight-medium">
+            <q-td>
+              Totais
+            </q-td>
+
+            <template v-for="column in columns.slice(1)" :key="column.name">
+              <q-td :align="column.align">
+                <template v-if="column.name.startsWith('servico_') || column.name == 'totalServicos'">
+                  {{ getTotalServico(column.name) }}
+                </template>
+
+                <template v-else-if="column.name.startsWith('produto_')">
+                  {{ getTotalProduto(column.name) }}
+                </template>
+
+                <template v-else-if="column.name === 'valorTotalServicos'">
+                  R$ {{ totalValorServicos.toFixed(2).replace('.', ',') }}
+                </template>
+
+                <template v-else-if="column.name === 'valorTotalVendas'">
+                  R$ {{ totalValorVendas.toFixed(2).replace('.', ',') }}
+                </template>
+
+                <template v-else-if="column.name === 'valorTotalFuncionario'">
+                  R$ {{ totalValorFuncionarios.toFixed(2).replace('.', ',') }}
+                </template>
+
+                <template v-else>
+                </template>
+              </q-td>
+            </template>
+          </q-tr>
+
+          <q-tr class="bg-grey-3 text-weight-medium" v-show="filters.funcionario_id === null || filters.funcionario_id === ''">
             <q-td colspan="100%" align="left">
               Total Geral: R$ {{ getTotalValorServicosVendas() }}
             </q-td>
           </q-tr>
-
-          <q-tr v-show="filters.funcionario_id === null || filters.funcionario_id === ''">
-            <q-td colspan="100%" align="left">
-              Total Vendas: R$ {{ totalValorVendas.toFixed(2).replace('.', ',') }}
-            </q-td>
-          </q-tr>
-
-          <q-tr>
-            <q-td colspan="100%" align="left">
-              Total Serviços: R$ {{ totalValorServicos.toFixed(2).replace('.', ',') }}
-            </q-td>
-          </q-tr>
-
-          <q-tr>
-            <q-td colspan="100%" align="left">
-              Total Barbeiro: R$ {{ totalValorFuncionarios.toFixed(2).replace('.', ',') }}
-            </q-td>
-          </q-tr>
         </template>
+
       </q-table>
     </div>
   </q-page>
@@ -160,6 +176,24 @@ onMounted(async () => {
 });
 
 watch(() => filters.value.funcionario_id, async () => await onFilterConfirm());
+
+function getTotalServico(columnName: string): number {
+  if (columnName === 'totalServicos') {
+    return tableData.value.reduce((total, row) => {
+      const servicos = row.servicos || {};
+      const somaServicos = Object.values(servicos).reduce((s, val) => s + (val || 0), 0);
+      return total + somaServicos;
+    }, 0);
+  }
+
+  const id = columnName.replace('servico_', '');
+  return tableData.value.reduce((sum, row) => sum + (row.servicos?.[id] || 0), 0);
+}
+
+function getTotalProduto(columnName: string): number {
+  const id = columnName.replace('produto_', '');
+  return tableData.value.reduce((sum, row) => sum + (row.produtos?.[id] || 0), 0);
+}
 
 function getFirstDayOfMonth() {
   const today = new Date();

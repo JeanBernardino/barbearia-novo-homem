@@ -27,6 +27,8 @@
                                 'email'
                             ]"
                             outlined
+                            class="text-lowercase"
+                            @input="usuario.email = usuario.email.toLowerCase()"
                         />
                     </div>
 
