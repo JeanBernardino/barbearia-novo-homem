@@ -49,22 +49,14 @@ export const useFuncionarioStore = defineStore('funcionario', {
     },
 
     async addFuncionario(funcionario: FuncionarioModel) {
-      try {
-        const newFuncionario = await funcionarioService.save(funcionario);
-        this.funcionarios.push(newFuncionario);
-      } catch (error) {
-        console.error("Erro ao adicionar funcionário:", error);
-      }
+      const newFuncionario = await funcionarioService.save(funcionario);
+      this.funcionarios.push(newFuncionario);
     },
 
     async updateFuncionario(funcionario: FuncionarioModel) {
-      try {
-        await funcionarioService.update(funcionario.id, { nome: funcionario.nome, ativo: funcionario.ativo });
-        const index = this.funcionarios.findIndex(item => item.id === funcionario.id);
-        if (index !== -1) this.funcionarios[index] = { ...funcionario };
-      } catch (error) {
-        console.error("Erro ao editar funcionário:", error);
-      }
+      await funcionarioService.update(funcionario.id, { nome: funcionario.nome, ativo: funcionario.ativo });
+      const index = this.funcionarios.findIndex(item => item.id === funcionario.id);
+      if (index !== -1) this.funcionarios[index] = { ...funcionario };
     },
 
     async changeStatusFuncionario(id: string) {

@@ -19,6 +19,7 @@
                                 emit-value
                                 map-options
                                 outlined
+                                lazy-rules
                                 :rules="[
                                     val => !!val || 'Selecione um serviço.',
                                 ]"
@@ -31,6 +32,7 @@
                                 suffix="%" 
                                 label="Valor"
                                 outlined
+                                lazy-rules
                                 :rules="[
                                     val => val !== 0 || 'Informe um valor para a comissão.',
                                 ]"

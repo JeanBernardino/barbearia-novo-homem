@@ -83,10 +83,10 @@ onMounted(async () => {
             funcionario.value = { ...model };
         } else {
             Notify.create({
-                message: 'Funcionário não encontrado.',
+                message: 'Barbeiro não encontrado.',
                 type: 'negative'
             })
-            await router.push('/funcionarios');
+            await router.push('/barbeiros');
         }
     }
 
@@ -97,17 +97,30 @@ const showComissoes = () => {
 };
 
 const onSave = async () => {
-    const isValid = await crudForm.value?.validate(true);
-    if (crudForm.value && !isValid) {
-        return;
-    }
+    try {
+        const isValid = await crudForm.value?.validate(true);
+        if (crudForm.value && !isValid) {
+            return;
+        }
 
-    if (funcionario.value.id) {
-        await store.updateFuncionario(funcionario.value);
-    } else {
-        await store.addFuncionario(funcionario.value);
-    }
-    await router.push('/funcionarios');
+        if (funcionario.value.id) {
+            await store.updateFuncionario(funcionario.value);
+        } else {
+            await store.addFuncionario(funcionario.value);
+        }
+        
+        await router.push('/barbeiros');
+        Notify.create({
+          message: "Barbeiro salvo com sucesso!",
+          type: "positive",
+        });
+    } catch (error) {
+        console.error("Erro ao salvar barbeiro:", error);
+        Notify.create({
+          message: "Ocorreu um erro ao salvar o barbeiro!",
+          type: "negative",
+        });
+      }
 };
 
 </script>
