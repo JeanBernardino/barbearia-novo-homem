@@ -8,6 +8,7 @@
       class="bg-secondary"
       align="justify"
     >
+      <q-tab name="consulta" label="Consulta" icon="search" />
       <q-tab name="trabalho" label="Trabalho" icon="work" />
       <q-tab name="venda" label="Venda" icon="inventory" />
     </q-tabs>
@@ -18,6 +19,10 @@
       infinite
       class="fit"
     >
+      <q-tab-panel name="consulta">
+        <ConsultaTabContent class="fit" />
+      </q-tab-panel>
+
       <q-tab-panel name="trabalho">
         <TrabalhoTabContent class="fit" />
       </q-tab-panel>
